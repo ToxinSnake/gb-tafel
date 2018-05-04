@@ -4,6 +4,59 @@
 * 04/05/2018
 */
 
-.row .wip {
-  background-color: #EEE;
+.wip {
+  /*background-color: #EEE;*/
+  outline: 1px solid;
+}
+
+body {
+  background: #e6f0ff;
+}
+
+#main-left {
+  font-size: 1.5em;
+  padding-top: 1em;
+  border-right: 5px solid black;
+}
+
+#main-left table {
+
+}
+
+#main-left td {
+  border-bottom: 0px;
+}
+
+#main-left tr#currentDay{
+  background-color: #99ff99;
+}
+
+#main-left td.date{
+  text-align: right;
+  margin-left: 30px;
+}
+
+#main-right {
+  padding-top: 1em;
+}
+
+#main-right article {
+  position: relative;
+  background-color: #fff;
+  border: 1px solid #ddd;
+	border-radius: 10px;
+  margin: 0 3em 2em 0;
+  padding: 10px;
+  min-height: 240px;
+}
+
+#main-right article p {
+  font-size: 16px;
+}
+
+#main-right article p.createdDate{
+  float: right;
+  position: absolute;
+  right: 1em;
+  bottom: 1%;
 }
