@@ -1,0 +1,42 @@
+/*
+* Made by Arne Otten
+* www.mj-12.net
+* 08/07/2018
+*/
+
+h3{
+  border-bottom: 1px solid #eeee;
+  margin-bottom: 1em;
+  padding-bottom: 0.5em;
+  min-width: 230px;
+  max-width: 400px;
+  display: block;
+  margin: 1em auto;
+}
+
+.button{
+  min-width: 230px;
+  max-width: 400px;
+  display: block;
+  margin: 1em auto;
+}
+
+input{
+  min-width: 230px;
+  max-width: 400px;
+  width: 100%;
+  display: block;
+  margin: 1em auto;
+}
+
+.twelve.columns#menu{
+  text-align: center;
+  margin-top: 20%;
+}
+
+@media only screen and (max-width: 600px) {
+  .twelve.columns#menu{
+    text-align: center;
+    margin-top: 10%;
+  }
+}
