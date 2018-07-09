@@ -2,9 +2,19 @@
 <!--
 * Made by Arne Otten
 * www.mj-12.net
-* 09/07/2018
+* 08/07/2018
 -->
 
+<?php
+include "../app/settings_methods.php";
+
+//Verbindung testen
+$result = "Hier stehen Testergebnisse.";
+
+if(isset($_GET["testcon"])){
+  $result = testConnection();
+}
+?>
 
 <html lang="en">
 <head>
@@ -12,7 +22,7 @@
   <!-- Basic Page Needs
   –––––––––––––––––––––––––––––––––––––––––––––––––– -->
   <meta charset="utf-8">
-  <title>Hauptmenü</title>
+  <title>Einstellungen</title>
   <meta name="description" content="">
   <meta name="author" content="Arne Otten">
 
@@ -42,11 +52,10 @@
   <div class="container">
     <div class="row">
       <div class="twelve columns" id="menu">
-        <h3>Hauptmenü</h3>
-        <a class="button button-primary" href="edit.html">Geburtstage bearbeiten</a>
-        <a class="button button-primary" href="#">Tafel ändern</a>
-        <a class="button button" href="settings.php">Einstellungen</a>
-        <a class="button button" href="#" style="margin-top: 3em;">Logout</a>
+        <h3>Einstellungen</h3>
+        <p><?php echo $result;?></p><br>
+        <a class="button button-primary" href="?testcon">DB-Verbindung testen</a>
+        <a class="button button" href="menu.html" style="margin-top: 3em;">Zurück</a>
     </div>
   </div>
 </div>
