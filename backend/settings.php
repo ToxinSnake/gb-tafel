@@ -14,6 +14,10 @@ $result = "Hier stehen Testergebnisse.";
 if(isset($_GET["testcon"])){
   $result = testConnection();
 }
+if(isset($_GET["createdb"])){
+  $result = createdb();
+}
+
 ?>
 
 <html lang="en">
@@ -55,6 +59,7 @@ if(isset($_GET["testcon"])){
         <h3>Einstellungen</h3>
         <p><?php echo $result;?></p><br>
         <a class="button button-primary" href="?testcon">DB-Verbindung testen</a>
+        <a class="button button-primary" href="?createdb">DB neu anlegen</a>
         <a class="button button" href="menu.html" style="margin-top: 3em;">Zurück</a>
     </div>
   </div>
