@@ -6,6 +6,23 @@
 * 08/07/2018
 -->
 
+<?php
+include "../app/new_methods.php";
+
+$msg = NULL;
+
+if(isset($_POST["firstNameInput"], $_POST["lastNameInput"], $_POST["birthdayInput"])){
+  $result = addToDB($_POST["firstNameInput"], $_POST["lastNameInput"], $_POST["birthdayInput"]);
+
+  if($result == true){
+    $msg = "Hinzufügen erfolgreich!";
+  } else {
+    $msg = "Hinzufügen gescheitert!";
+  }
+}
+
+ ?>
+
 <html lang="en">
 <head>
 
@@ -43,10 +60,11 @@
     <div class="row">
       <div class="twelve columns" id="menu">
         <h3>Geburtstag hinzufügen</h3>
-        <form>
-          <input id="firstNameInput" placeholder="Vorname" type="text" autofocus>
-          <input id="LastNameInput" placeholder="Nachname" type="text">
-          <input id="Birthday" type="date">
+      <?php if(!empty($msg)){ ?> <p> <?php echo $msg; ?> </p><br> <?php } ?>
+        <form action="" method="post">
+          <input name="firstNameInput" placeholder="Vorname" type="text" maxlength="35" autofocus>
+          <input name="lastNameInput" placeholder="Nachname" type="text" maxlength="35">
+          <input name="birthdayInput" type="date">
           <input class="button-primary" value="Hinzufügen" type="submit">
         </form>
         <a class="button button" href="edit.html">Zurück</a>

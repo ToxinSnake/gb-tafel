@@ -21,17 +21,25 @@ class SQLiteConnection{
   public function create(){
     $configs = include('config.php');
     $path = "../".$configs['PATH_TO_SQLITE_FILE'];
+    $sqlInit = 'CREATE TABLE Person (
+      PNr INTEGER PRIMARY KEY,
+      Firstname TEXT NOT NULL,
+      Lastname TEXT NOT NULL,
+      Birthday TEXT NOT NULL)';
+    $pdo;
 
     if(file_exists($path)){
       return self::DB_ALREADY_EXISTS;
     }
     else {
       try{
-        new PDO("sqlite:".$path);
+        $pdo = new PDO("sqlite:".$path);
       } //endtry
       catch (PDOException $e){
         return self::CREATION_FAILED;
       } //endcatch
+
+      $pdo->exec($sqlInit); //Tabellen anlegen
       return self::SUCCESS;
     } //endelse
   }
@@ -56,7 +64,7 @@ class SQLiteConnection{
       catch (PDOException $e){
         return self::CONNECTION_FAILED;
       } //endcatch
-    } 
+    }
     else {
       return self::DB_DOES_NOT_EXISTS;
     } //endelse

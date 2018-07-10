@@ -5,6 +5,11 @@
 * www.mj-12.net
 * 08/07/2018
 -->
+<?php
+include "../app/search_methods.php";
+$resultset = showAll(); //PDOStatement on success, int on fail
+?>
+
 
 <html lang="en">
 <head>
@@ -80,15 +85,18 @@ input[type="text"], .button, select{
              <option value="sortBirthdayDesc">Geburtstag (Absteigend)</option>
           </select>
 
-        <!--
-          <br>
-          <label for="order" style="display: inline;">Absteigend</label>
-          <input id="order" type="checkbox" name="order" value="descending">
-        -->
-        
         </form>
         <a class="button button-primary" href="#">Suchen</a>
         <a class="button button" href="edit.html">Zurück</a>
+        <br>
+
+
+        <?php
+        //check wether connection to db established
+        if($resultset instanceof PDOStatement == FALSE){
+          echo "Verbindung zur Datenbank fehlgeschlagen.";
+        }
+          ?>
 
         <table class="u-full-width">
           <thead>
@@ -99,18 +107,18 @@ input[type="text"], .button, select{
             </tr>
           </thead>
           <tbody>
-            <tr>
-              <td>Arne</td>
-              <td>Otten</td>
-              <td>29.10.1993</td>
-            </tr>
-            <tr>
-              <td>Pia</td>
-              <td>Flessner</td>
-              <td>03.09.1997</td>
-            </tr>
+            <?php
+            //iterate over PDOStatement if connection to db is established
+            if($resultset instanceof PDOStatement){
+              foreach ($resultset as $row){ ?>
+              <tr>
+                <td><?php echo $row['Firstname'];?></td>
+                <td><?php echo $row['Lastname'];?></td>
+                <td><?php echo $row['Birthday'];?></td>
+              </tr>
+        <?php }
+            } ?>
           </tbody>
-
     </div>
   </div>
 </div>
