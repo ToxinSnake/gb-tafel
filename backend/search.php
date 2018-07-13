@@ -7,7 +7,24 @@
 -->
 <?php
 include "../app/search_methods.php";
-$resultset = showAll(); //PDOStatement on success, int on fail
+
+//default behaviour
+if(empty($_POST["firstNameInput"]) && empty($_POST["lastNameInput"]) && empty($_POST["birthdayInput"])){
+  try{
+    $resultset = showAll();
+  }
+  catch(Exception $e){
+    $msg = $e->getMessage();
+  }
+} else {
+  try{
+    $resultset = search($_POST["firstNameInput"], $_POST["lastNameInput"], $_POST["birthdayInput"]);
+  }
+  catch(Exception $e){
+    $msg = $e->getMessage();
+  }
+}
+
 ?>
 
 
@@ -35,6 +52,12 @@ $resultset = showAll(); //PDOStatement on success, int on fail
   <link rel="stylesheet" href="../css/skeleton.css">
   <!-- <link rel="stylesheet" href="../css/menustyle.css"> -->
 
+  <!-- Tablesorter JS
+  –––––––––––––––––––––––––––––––––––––––––––––––––– -->
+  <script type="text/javascript" src="../js/jquery-latest.js"></script>
+  <script type="text/javascript" src="../js/jquery.tablesorter.js"></script>
+
+
   <!-- Favicon
   –––––––––––––––––––––––––––––––––––––––––––––––––– -->
   <link rel="icon" type="image/png" href="../images/favicon.png">
@@ -52,7 +75,7 @@ h3{
   margin: 1em auto;
 }
 
-input[type="text"], .button, select{
+input, .button, select{
   max-width: 200px;
   min-width: 115px;
   width: 100%;
@@ -71,22 +94,12 @@ input[type="text"], .button, select{
     <div class="row">
       <div class="twelve columns">
         <h3>Geburtstag suchen</h3>
-        <form>
-          <input id="firstNameInput" placeholder="Vorname" type="text" autofocus>
-          <input id="LastNameInput" placeholder="Nachname" type="text"><br>
-          <input id="Birthday" placeholder="Geburtstag" type="text">
-          <select>
-             <option value="" disabled selected>Sortieren nach...</option>
-             <option value="sortFirstnameAsc">Vorname (Aufsteigend)</option>
-             <option value="sortFirstnameDesc">Vorname (Absteigend)</option>
-             <option value="sortLastnameAsc">Nachname (Aufsteigend)</option>
-             <option value="sortLastnameDesc">Nachname (Absteigend)</option>
-             <option value="sortBirthdayAsc">Geburtstag (Aufsteigend)</option>
-             <option value="sortBirthdayDesc">Geburtstag (Absteigend)</option>
-          </select>
-
+        <form action="" method="post">
+          <input name="firstNameInput" placeholder="Vorname" type="text" autofocus>
+          <input name="lastNameInput" placeholder="Nachname" type="text"><br>
+          <input name="birthdayInput" placeholder="Geburtstag" type="text"><br>
+          <input class="button-primary" value="Suchen" type="submit">
         </form>
-        <a class="button button-primary" href="#">Suchen</a>
         <a class="button button" href="edit.html">Zurück</a>
         <br>
 
@@ -94,11 +107,11 @@ input[type="text"], .button, select{
         <?php
         //check wether connection to db established
         if($resultset instanceof PDOStatement == FALSE){
-          echo "Verbindung zur Datenbank fehlgeschlagen.";
+          echo "$msg";
         }
           ?>
 
-        <table class="u-full-width">
+        <table id="resultTable" class="u-full-width">
           <thead>
             <tr>
               <th>Vorname</th>
@@ -122,6 +135,16 @@ input[type="text"], .button, select{
     </div>
   </div>
 </div>
+
+<!-- Tablesorter JS -->
+<script>
+$(document).ready(function()
+    {
+        $("#resultTable").tablesorter();
+    }
+);
+</script>
+
 <!-- End Document
   –––––––––––––––––––––––––––––––––––––––––––––––––– -->
 </body>

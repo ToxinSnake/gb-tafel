@@ -11,13 +11,16 @@ include "../app/new_methods.php";
 
 $msg = NULL;
 
-if(isset($_POST["firstNameInput"], $_POST["lastNameInput"], $_POST["birthdayInput"])){
-  $result = addToDB($_POST["firstNameInput"], $_POST["lastNameInput"], $_POST["birthdayInput"]);
+if(!empty($_POST["firstNameInput"]) && !empty($_POST["lastNameInput"]) && !empty($_POST["birthdayInput"])){
+  try{
+    $result = addToDB($_POST["firstNameInput"], $_POST["lastNameInput"], $_POST["birthdayInput"]);
+  }
+  catch(Exception $e){
+    $msg = $e->getMessage();
+  }
 
   if($result == true){
     $msg = "Hinzufügen erfolgreich!";
-  } else {
-    $msg = "Hinzufügen gescheitert!";
   }
 }
 
@@ -60,11 +63,11 @@ if(isset($_POST["firstNameInput"], $_POST["lastNameInput"], $_POST["birthdayInpu
     <div class="row">
       <div class="twelve columns" id="menu">
         <h3>Geburtstag hinzufügen</h3>
-      <?php if(!empty($msg)){ ?> <p> <?php echo $msg; ?> </p><br> <?php } ?>
+      <?php if(!empty($msg)){ ?> <p> <?php echo $msg; ?> </p> <?php } ?>
         <form action="" method="post">
-          <input name="firstNameInput" placeholder="Vorname" type="text" maxlength="35" autofocus>
-          <input name="lastNameInput" placeholder="Nachname" type="text" maxlength="35">
-          <input name="birthdayInput" type="date">
+          <input name="firstNameInput" placeholder="Vorname" type="text" maxlength="40" autofocus required>
+          <input name="lastNameInput" placeholder="Nachname" type="text" maxlength="40" required>
+          <input name="birthdayInput" type="date" required>
           <input class="button-primary" value="Hinzufügen" type="submit">
         </form>
         <a class="button button" href="edit.html">Zurück</a>

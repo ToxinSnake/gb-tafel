@@ -14,11 +14,11 @@ $result = "Hier stehen Testergebnisse.";
 if(isset($_GET["testcon"])){
   $result = testConnection();
 }
-/*
+
 if(isset($_GET["createdb"])){
   $result = createdb();
 }
-*/
+
 ?>
 
 <html lang="en">

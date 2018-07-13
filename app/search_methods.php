@@ -16,4 +16,51 @@ function showAll(){
   }
 }
 
+function showDefault(){
+  $pdo = (new SQLiteConnection())->connect();
+  if(!($pdo instanceof PDO)){
+    throw new Exception("Verbindung zu DB fehlgeschlagen!");
+  }
+
+  $sql = "SELECT Firstname, Lastname, Birthday FROM Person LIMIT 10";
+  return $pdo->query($sql);
+}
+
+
+function search($firstname, $lastname, $birthday){
+  if($firstname == NULL){
+    $firstname = "%";
+  }
+  if($lastname == NULL){
+    $lastname = "%";
+  }
+  if($birthday == NULL){
+    $birthday = "%";
+  }
+
+  $pdo = (new SQLiteConnection())->connect();
+  if(!($pdo instanceof PDO)){
+    throw new Exception("Verbindung zu DB fehlgeschlagen!");
+  }
+  echo "$firstname";
+  echo "$lastname";
+  echo "$birthday";
+
+
+  $sql = "SELECT Firstname, Lastname, Birthday
+  FROM Person
+  WHERE Firstname LIKE :firstname
+  AND Lastname LIKE :lastname
+  AND Birthday LIKE :birthday
+  LIMIT 10";
+  $statement = $pdo->prepare($sql);
+  $statement->execute([ //TRUE on success, FALSE else
+    ':firstname' => $firstname,
+    ':lastname' => $lastname,
+    ':birthday' => $birthday
+  ]);
+
+  return $statement;
+}
+
 ?>
