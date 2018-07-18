@@ -42,10 +42,6 @@ function search($firstname, $lastname, $birthday){
   if(!($pdo instanceof PDO)){
     throw new Exception("Verbindung zu DB fehlgeschlagen!");
   }
-  echo "$firstname";
-  echo "$lastname";
-  echo "$birthday";
-
 
   $sql = "SELECT Firstname, Lastname, Birthday
   FROM Person

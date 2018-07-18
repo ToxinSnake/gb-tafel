@@ -10,13 +10,9 @@ include "../app/search_methods.php";
 
 //default behaviour
 if(empty($_POST["firstNameInput"]) && empty($_POST["lastNameInput"]) && empty($_POST["birthdayInput"])){
-  try{
-    $resultset = showAll();
-  }
-  catch(Exception $e){
-    $msg = $e->getMessage();
-  }
-} else {
+
+}
+else {
   try{
     $resultset = search($_POST["firstNameInput"], $_POST["lastNameInput"], $_POST["birthdayInput"]);
   }
@@ -50,7 +46,7 @@ if(empty($_POST["firstNameInput"]) && empty($_POST["lastNameInput"]) && empty($_
   –––––––––––––––––––––––––––––––––––––––––––––––––– -->
   <link rel="stylesheet" href="../css/normalize.css">
   <link rel="stylesheet" href="../css/skeleton.css">
-  <!-- <link rel="stylesheet" href="../css/menustyle.css"> -->
+  <link rel="stylesheet" href="../css/menustyle.css">
 
   <!-- Tablesorter JS
   –––––––––––––––––––––––––––––––––––––––––––––––––– -->
@@ -63,41 +59,18 @@ if(empty($_POST["firstNameInput"]) && empty($_POST["lastNameInput"]) && empty($_
   <link rel="icon" type="image/png" href="../images/favicon.png">
 
 </head>
-<style>
-
-h3{
-  text-align: center;
-  border-bottom: 1px solid #eeee;
-  padding-bottom: 0.5em;
-  min-width: 230px;
-  max-width: 400px;
-  display: block;
-  margin: 1em auto;
-}
-
-input, .button, select{
-  max-width: 200px;
-  min-width: 115px;
-  width: 100%;
-}
-
-.twelve.columns{
-  text-align: center;
-}
-
-</style>
 <body>
 
   <!-- Primary Page Layout
   –––––––––––––––––––––––––––––––––––––––––––––––––– -->
   <div class="container">
     <div class="row">
-      <div class="twelve columns">
+      <div class="twelve columns" id="search">
         <h3>Geburtstag suchen</h3>
         <form action="" method="post">
           <input name="firstNameInput" placeholder="Vorname" type="text" autofocus>
-          <input name="lastNameInput" placeholder="Nachname" type="text"><br>
-          <input name="birthdayInput" placeholder="Geburtstag" type="text"><br>
+          <input name="lastNameInput" placeholder="Nachname" type="text">
+          <input name="birthdayInput" placeholder="Geburtstag (dd.mm.YYYY)" type="text">
           <input class="button-primary" value="Suchen" type="submit">
         </form>
         <a class="button button" href="edit.html">Zurück</a>

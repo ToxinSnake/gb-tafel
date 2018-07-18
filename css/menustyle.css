@@ -34,6 +34,10 @@ input{
   margin-top: 20%;
 }
 
+.twelve.columns#search{
+  text-align: center;
+}
+
 @media only screen and (max-width: 600px) {
   .twelve.columns#menu{
     text-align: center;

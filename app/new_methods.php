@@ -2,33 +2,67 @@
 
 include "SQLiteConnection.php";
 
-/**
-* Adds firstname, lastname and birthday to db.
-* Checks for length of names and throws an Exception if they exceed the limit.
-*/
 
-function addToDB($firstname, $lastname, $birthday){
+function validateFirstname($firstname){
   $configs = include('config.php');
+  $firstNameLength = $configs['MAX_FIRST_NAME_LENGTH'];
 
-  $firstNameLength = intval($configs['MAX_FIRST_NAME_LENGTH']);
-  $lastNameLength = intval($configs['MAX_LAST_NAME_LENGTH']);
-
-  //Check firstname length
-  if(mb_strlen($firstname) > $firstNameLength){
-    throw new Exception("Vorname zu lang!");
+  if(mb_strlen($firstname) == 0){
+    throw new Exception("Vorname muss mindestens ein Zeichen beinhalten!");
   }
 
-  //Check lastname length
+  if(mb_strlen($firstname) > $firstNameLength ){
+    throw new Exception("Vorname zu lang!");
+  }
+}
+
+function validateLastname($lastname){
+  $configs = include('config.php');
+  $lastNameLength = $configs['MAX_LAST_NAME_LENGTH'];
+
+  if(mb_strlen($lastname) == 0){
+    throw new Exception("Nachname muss mindestens ein Zeichen beinhalten!");
+  }
+
   if(mb_strlen($lastname) > $lastNameLength){
     throw new Exception("Nachname zu lang!");
   }
+}
 
-  //check wether bday is in the future
+function validateBirthday($birthday){
+  // Checks for the following format: yyyy-mm-dd
+  $regex_pattern = "/[0-9]{4}-[0-9]{2}-[0-9]{2}/";
+
+  //the === operator also checks for type compatibility
+  if(preg_match($regex_pattern, $birthday) === 0){
+    throw new Exception("Datum muss im Format YYYY-mm-dd vorliegen!");
+  }
+
+  // Check if the date is in the past
   $date = new DateTime($birthday);
   $now = new DateTime();
   if($date > $now){
     throw new Exception("Datum liegt in der Zukunft!");
   }
+}
+
+/**
+* Adds firstname, lastname and birthday to db.
+*
+*/
+
+function addToDB($firstname, $lastname, $birthday){
+
+  //Check firstname length
+  validateFirstname($firstname);
+
+  //Check lastname length
+  validateLastname($lastname);
+
+  //check if bday is in correct format and not in the future
+  validateBirthday($birthday);
+
+  $date = new DateTime($birthday);
 
   //format date to german locale
   $date = $date->format('d.m.Y');
