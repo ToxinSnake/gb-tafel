@@ -1,0 +1,63 @@
+/*
+* Made by Arne Otten
+* www.mj-12.net
+* 06/08/2018
+*/
+
+#header {
+  padding: 20px 0px 20px 20px;
+}
+
+#header img{
+  max-width: 300px;
+  float: left;
+  clear: right;
+}
+
+#header h4 {
+  margin-left: 20%;
+  border: 0;
+  border-left: 3px;
+  border-style: solid;
+}
+
+#left {
+  width: 50%;
+  margin: 0;
+  padding: 20px 20px 0 20px;
+  background-color: green;
+}
+
+#left table {
+  border: 5px solid blue;
+}
+
+#left thead {
+  color: white;
+  background-color: blue;
+}
+
+#left th {
+  text-align: center;
+}
+
+#left td {
+  text-align: center;
+}
+
+#right {
+  width: 50%;
+  margin: 0;
+  background-color: red;
+  padding: 20px 20px 0 20px;
+}
+
+#right article {
+  position: relative;
+  background-color: #fff;
+  border: 1px solid #ddd;
+	border-radius: 10px;
+  margin: 0 0 2em 0;
+  padding: 10px;
+  min-height: 100px;
+}

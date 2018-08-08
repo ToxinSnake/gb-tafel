@@ -80,7 +80,7 @@ else {
         <?php
         //check wether connection to db established
         if($resultset instanceof PDOStatement == FALSE){
-          echo "$msg";
+          echo $msg;
         }
           ?>
 
