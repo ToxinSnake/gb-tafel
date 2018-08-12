@@ -36,6 +36,8 @@ function search($firstname, $lastname, $birthday){
   }
   if($birthday == NULL){
     $birthday = "%";
+  } else {
+    //TODO: Konvertierung von dd.mm.YYYY zu YYYY-mm-dd
   }
 
   $pdo = (new SQLiteConnection())->connect();
@@ -43,7 +45,7 @@ function search($firstname, $lastname, $birthday){
     throw new Exception("Verbindung zu DB fehlgeschlagen!");
   }
 
-  $sql = "SELECT Firstname, Lastname, Birthday
+  $sql = "SELECT PNr, Firstname, Lastname, Birthday
   FROM Person
   WHERE Firstname LIKE :firstname
   AND Lastname LIKE :lastname
@@ -57,6 +59,20 @@ function search($firstname, $lastname, $birthday){
   ]);
 
   return $statement;
+}
+
+function delete($Pnr){
+  $pdo = (new SQLiteConnection())->connect();
+  if(!($pdo instanceof PDO)){
+    throw new Exception("Verbindung zu DB fehlgeschlagen!");
+  }
+
+  $sql = "DELETE FROM Person WHERE PNr = :pnr";
+  $statement = $pdo->prepare($sql);
+  $statement->execute([':pnr' => $Pnr]); //TRUE on success, FALSE else
+
+  return $statement;
+
 }
 
 ?>

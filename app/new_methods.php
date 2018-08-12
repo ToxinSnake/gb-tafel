@@ -62,10 +62,11 @@ function addToDB($firstname, $lastname, $birthday){
   //check if bday is in correct format and not in the future
   validateBirthday($birthday);
 
-  $date = new DateTime($birthday);
+  $date = $birthday;
 
   //format date to german locale
-  $date = $date->format('d.m.Y');
+  //$date = new DateTime($birthday);
+  //$date = $date->format('d.m.Y');
 
   //Connect to DB
   $pdo = (new SQLiteConnection())->connect();

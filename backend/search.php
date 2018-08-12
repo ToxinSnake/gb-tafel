@@ -12,6 +12,8 @@ include "../app/search_methods.php";
 if(empty($_POST["firstNameInput"]) && empty($_POST["lastNameInput"]) && empty($_POST["birthdayInput"])){
 
 }
+
+//search
 else {
   try{
     $resultset = search($_POST["firstNameInput"], $_POST["lastNameInput"], $_POST["birthdayInput"]);
@@ -20,6 +22,12 @@ else {
     $msg = $e->getMessage();
   }
 }
+
+//deleting
+if(!empty($_GET["del"])){
+  $resultset = delete($_GET["del"]);
+}
+//TODO: Abfrage ob sicher
 
 ?>
 
@@ -87,9 +95,11 @@ else {
         <table id="resultTable" class="u-full-width">
           <thead>
             <tr>
+              <th>Nr</th>
               <th>Vorname</th>
               <th>Nachname</th>
               <th>Geburtstag</th>
+              <th>Aktionen</th>
             </tr>
           </thead>
           <tbody>
@@ -98,9 +108,11 @@ else {
             if($resultset instanceof PDOStatement){
               foreach ($resultset as $row){ ?>
               <tr>
+                <td><?php echo $row['PNr'];?></td>
                 <td><?php echo $row['Firstname'];?></td>
                 <td><?php echo $row['Lastname'];?></td>
                 <td><?php echo $row['Birthday'];?></td>
+                <td><a href="search.php?del=<?php echo $row['PNr'];?>">L</a></td>
               </tr>
         <?php }
             } ?>
