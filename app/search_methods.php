@@ -36,9 +36,7 @@ function search($firstname, $lastname, $birthday){
   }
   if($birthday == NULL){
     $birthday = "%";
-  } else {
-    //TODO: Konvertierung von dd.mm.YYYY zu YYYY-mm-dd
-  }
+  } 
 
   $pdo = (new SQLiteConnection())->connect();
   if(!($pdo instanceof PDO)){

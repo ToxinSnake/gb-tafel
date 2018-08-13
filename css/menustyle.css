@@ -38,6 +38,42 @@ input{
   text-align: center;
 }
 
+img:hover {
+  cursor: pointer;
+}
+
+table#resultTable tr img{
+  visibility: hidden;
+}
+
+table#resultTable tr:hover img{
+  visibility: visible;
+}
+
+table#resultTable tr:hover td{
+  background: #e9f3fb;
+  transition: background .2s ease;
+}
+
+th.headerSortUp, th.headerSortDown {
+  color: #3399FF;
+}
+
+th.headerSortUp {
+  background-image: url(../images/asc.gif);
+}
+
+th.headerSortDown {
+  background-image: url(../images/desc.gif);
+}
+
+th.head {
+    cursor: pointer;
+    font-weight: bold;
+    background-repeat: no-repeat;
+    background-position: center right;
+}
+
 @media only screen and (max-width: 600px) {
   .twelve.columns#menu{
     text-align: center;

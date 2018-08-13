@@ -15,6 +15,7 @@ if(empty($_POST["firstNameInput"]) && empty($_POST["lastNameInput"]) && empty($_
 
 //search
 else {
+  unset($_GET); //necessary if del or edit was done before
   try{
     $resultset = search($_POST["firstNameInput"], $_POST["lastNameInput"], $_POST["birthdayInput"]);
   }
@@ -26,8 +27,10 @@ else {
 //deleting
 if(!empty($_GET["del"])){
   $resultset = delete($_GET["del"]);
+  if($resultset == FALSE){
+    $msg = "Hallo";
+  }
 }
-//TODO: Abfrage ob sicher
 
 ?>
 
@@ -78,7 +81,7 @@ if(!empty($_GET["del"])){
         <form action="" method="post">
           <input name="firstNameInput" placeholder="Vorname" type="text" autofocus>
           <input name="lastNameInput" placeholder="Nachname" type="text">
-          <input name="birthdayInput" placeholder="Geburtstag (dd.mm.YYYY)" type="text">
+          <input name="birthdayInput" placeholder="Geburtstag (YYYY-mm-dd)" type="text">
           <input class="button-primary" value="Suchen" type="submit">
         </form>
         <a class="button button" href="edit.html">Zurück</a>
@@ -95,11 +98,10 @@ if(!empty($_GET["del"])){
         <table id="resultTable" class="u-full-width">
           <thead>
             <tr>
-              <th>Nr</th>
-              <th>Vorname</th>
-              <th>Nachname</th>
-              <th>Geburtstag</th>
-              <th>Aktionen</th>
+              <th class="head">Vorname</th>
+              <th class="head">Nachname</th>
+              <th class="head">Geburtstag</th>
+              <th></th>
             </tr>
           </thead>
           <tbody>
@@ -108,11 +110,11 @@ if(!empty($_GET["del"])){
             if($resultset instanceof PDOStatement){
               foreach ($resultset as $row){ ?>
               <tr>
-                <td><?php echo $row['PNr'];?></td>
                 <td><?php echo $row['Firstname'];?></td>
                 <td><?php echo $row['Lastname'];?></td>
                 <td><?php echo $row['Birthday'];?></td>
-                <td><a href="search.php?del=<?php echo $row['PNr'];?>">L</a></td>
+                <td><img title="Löschen" src="../images/trash-bin-symbol.png" onclick="return confirm('Sind Sie sicher?');" href="search.php?del=<?php echo $row['PNr'];?>">
+                    <img title="Bearbeiten" src="../images/pencil-edit-button.png" href="search.php?edit=<?php echo $row['PNr'];?>"></td>
               </tr>
         <?php }
             } ?>
