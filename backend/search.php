@@ -8,29 +8,38 @@
 <?php
 include "../app/search_methods.php";
 
-//default behaviour
-if(empty($_POST["firstNameInput"]) && empty($_POST["lastNameInput"]) && empty($_POST["birthdayInput"])){
-
+//delete
+if(!empty($_POST["del"])){
+  $resultset = delete($_POST["del"]);
 }
-
-//search
-else {
-  unset($_GET); //necessary if del or edit was done before
+//edit
+if(!empty($_POST["pnr"]) && !empty($_POST["changeFirstName"]) && !empty($_POST["changeLastName"]) && !empty($_POST["changeBirthday"])){
   try{
-    $resultset = search($_POST["firstNameInput"], $_POST["lastNameInput"], $_POST["birthdayInput"]);
+    $changeResult = changeToDB($_POST["pnr"], $_POST["changeFirstName"], $_POST["changeLastName"], $_POST["changeBirthday"]);
+    $msg = "Ändern erfolgreich!";
   }
   catch(Exception $e){
     $msg = $e->getMessage();
   }
 }
 
-//deleting
-if(!empty($_GET["del"])){
-  $resultset = delete($_GET["del"]);
-  if($resultset == FALSE){
-    $msg = "Hallo";
+//default behaviour
+if(empty($_GET)){
+  $resultset = showDefault();
+}
+
+//search
+else {
+  if(!empty($_GET["firstNameInput"]) || !empty($_GET["lastNameInput"]) || !empty($_GET["birthdayInput"])){
+    try{
+      $resultset = search($_GET["firstNameInput"], $_GET["lastNameInput"], $_GET["birthdayInput"]);
+    }
+    catch(Exception $e){
+      $msg = $e->getMessage();
+    }
   }
 }
+
 
 ?>
 
@@ -78,7 +87,7 @@ if(!empty($_GET["del"])){
     <div class="row">
       <div class="twelve columns" id="search">
         <h3>Geburtstag suchen</h3>
-        <form action="" method="post">
+        <form action="" method="get">
           <input name="firstNameInput" placeholder="Vorname" type="text" autofocus>
           <input name="lastNameInput" placeholder="Nachname" type="text">
           <input name="birthdayInput" placeholder="Geburtstag (YYYY-mm-dd)" type="text">
@@ -90,12 +99,12 @@ if(!empty($_GET["del"])){
 
         <?php
         //check wether connection to db established
-        if($resultset instanceof PDOStatement == FALSE){
+        if($resultset instanceof PDOStatement == FALSE || !empty($changeResult)){
           echo $msg;
         }
           ?>
 
-        <table id="resultTable" class="u-full-width">
+        <table id="resultTable" class="u-full-width" style="table-layout: fixed">
           <thead>
             <tr>
               <th class="head">Vorname</th>
@@ -113,8 +122,10 @@ if(!empty($_GET["del"])){
                 <td><?php echo $row['Firstname'];?></td>
                 <td><?php echo $row['Lastname'];?></td>
                 <td><?php echo $row['Birthday'];?></td>
-                <td><img title="Löschen" src="../images/trash-bin-symbol.png" onclick="return confirm('Sind Sie sicher?');" href="search.php?del=<?php echo $row['PNr'];?>">
-                    <img title="Bearbeiten" src="../images/pencil-edit-button.png" href="search.php?edit=<?php echo $row['PNr'];?>"></td>
+                <td><form action="" method="post">
+                  <button style="font-size: 9px;" name="del" type="submit" onclick="return confirm('Wirklich löschen?');" value="<?php echo $row['PNr'];?>">Löschen</button>
+                  <button style="font-size: 9px;" name="edit" type="submit" formaction="change.php" value="<?php echo $row['PNr'];?>">Ändern</button>
+                </form></td>
               </tr>
         <?php }
             } ?>

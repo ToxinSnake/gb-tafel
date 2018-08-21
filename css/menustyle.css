@@ -21,7 +21,7 @@ h3{
   margin: 1em auto;
 }
 
-input{
+input {
   min-width: 230px;
   max-width: 400px;
   width: 100%;
@@ -42,11 +42,15 @@ img:hover {
   cursor: pointer;
 }
 
-table#resultTable tr img{
+table#resultTable form {
+  margin-bottom: 0;
+}
+
+table#resultTable tr button{
   visibility: hidden;
 }
 
-table#resultTable tr:hover img{
+table#resultTable tr:hover button{
   visibility: visible;
 }
 
@@ -72,6 +76,15 @@ th.head {
     font-weight: bold;
     background-repeat: no-repeat;
     background-position: center right;
+    text-align: center;
+}
+
+td {
+  text-align: center;
+}
+
+table#resultTable form button {
+  margin-bottom: 0;
 }
 
 @media only screen and (max-width: 600px) {
