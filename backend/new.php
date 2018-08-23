@@ -67,7 +67,7 @@ if(!empty($_POST["firstNameInput"]) && !empty($_POST["lastNameInput"]) && !empty
         <form action="" method="post">
           <input type="text" name="firstNameInput" value="<?php echo isset($_POST["firstNameInput"]) ? htmlspecialchars($_POST['firstNameInput']) : ''  ?>" placeholder="Vorname"  maxlength="40" autofocus required>
           <input type="text" name="lastNameInput" value="<?php echo isset($_POST["lastNameInput"]) ? htmlspecialchars($_POST['lastNameInput']) : '' ?>" placeholder="Nachname"  maxlength="40" required>
-          <input type="date" name="birthdayInput" value="<?php echo isset($_POST["birthdayInput"]) ? htmlspecialchars($_POST['birthdayInput']) : '' ?>" placeholder="Geburtstag (YYYY-mm-dd)" maxlength="10" required>
+          <input type="date" name="birthdayInput" value="<?php echo isset($_POST["birthdayInput"]) ? htmlspecialchars($_POST['birthdayInput']) : '' ?>" placeholder="Geburtstag (YYYY-mm-dd)" maxlength="10" max="2100-01-01" required>
           <input class="button-primary" value="Hinzufügen" type="submit">
         </form>
         <a class="button button" href="edit.html">Zurück</a>

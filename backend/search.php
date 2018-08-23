@@ -98,8 +98,8 @@ else {
 
 
         <?php
-        //check wether connection to db established
-        if($resultset instanceof PDOStatement == FALSE || !empty($changeResult)){
+        //Messages get displayed here
+        if(!empty($msg)){
           echo $msg;
         }
           ?>

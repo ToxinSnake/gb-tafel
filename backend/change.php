@@ -62,7 +62,7 @@ if(!empty($_POST["edit"])){
         <form action="" method="post">
           <input type="text" name="changeFirstName" value="<?php echo isset($row["Firstname"]) ? htmlspecialchars($row['Firstname']) : ''  ?>" placeholder="Vorname"  maxlength="40" autofocus required>
           <input type="text" name="changeLastName" value="<?php echo isset($row["Lastname"]) ? htmlspecialchars($row['Lastname']) : '' ?>" placeholder="Nachname"  maxlength="40" required>
-          <input type="date" name="changeBirthday" value="<?php echo isset($row["Birthday"]) ? htmlspecialchars($row['Birthday']) : '' ?>" placeholder="Geburtstag (YYYY-mm-dd)" maxlength="10" required>
+          <input type="date" name="changeBirthday" value="<?php echo isset($row["Birthday"]) ? htmlspecialchars($row['Birthday']) : '' ?>" placeholder="Geburtstag (YYYY-mm-dd)" maxlength="10" max="2100-01-01" required>
           <input type="hidden" value="<?php echo ($_POST["edit"]) ?>" name="pnr">
           <input class="button-primary" value="Ändern" formaction="search.php" type="submit">
         </form>

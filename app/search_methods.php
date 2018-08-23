@@ -111,6 +111,7 @@ function validateBirthday($birthday){
   // Check if the date is in the past
   $date = new DateTime($birthday);
   $now = new DateTime();
+  
   if($date > $now){
     throw new Exception("Datum liegt in der Zukunft!");
   }
