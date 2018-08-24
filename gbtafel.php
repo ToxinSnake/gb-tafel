@@ -1,4 +1,18 @@
 <!DOCTYPE html>
+
+
+<?php
+include "./app/board_methods.php";
+
+setlocale (LC_ALL, 'de_DE');
+
+$bdset = getCurrentAndUpcoming();
+if(empty($bdset)){
+  $msg = "Keine Verbindung zur Datenbank möglich.";
+}
+
+?>
+
 <html lang="en">
 <head>
 
@@ -68,40 +82,67 @@
             <td>41</td>
           </tr> <!-- End of Day -1 -->
 
-          <tr class="current"> <!-- Day 0 -->
-            <td>09.08</td>
-            <td>Donnerstag</td>
-            <td>Bob der Baumeister</td>
-            <td>35</td>
-          </tr> <!-- End of Day 0 -->
+          <!-- Current day -->
+          <?php
+          if($bdset instanceof PDOStatement){
+            foreach ($bdset as $row){
+              ?>
+          <tr class="current">
+            <?php
+              if(date('m-d') == substr($row['Birthday'],5,5)){
+                $filled = TRUE; //needed to not have double entries
 
-          <tr> <!-- Day 1 -->
-            <td>12.08</td>
-            <td>Sonntag</td>
-            <td>Franz Josef</td>
-            <td>49</td>
-          </tr>
+                //check if the current date is the same as the last
+                if((substr($row['Birthday'],8,2).".".substr($row['Birthday'],5,2)) == $date){
+                  $doubleDate = TRUE;
+                } else {
+                  $doubleDate = FALSE;
+                }
+                $date = substr($row['Birthday'],8,2).".".substr($row['Birthday'],5,2);
+
+                //translate english weekdays to german
+                $weekday = date('l');
+                $weekday = strtr($weekday, $trans);
+
+                //calculate age
+                $age = date('Y') - substr($row['Birthday'],0,4);
+            ?>
+            <td><?php echo $doubleDate == TRUE ? "" : $date; ?></td>
+            <td><?php echo $doubleDate == TRUE ? "" : $weekday; ?></td>
+            <td><?php echo "{$row['Firstname']} {$row['Lastname']}";?></td>
+            <td><?php echo $age; ?></td>
+          </tr> <!-- End of current day -->
+        <?php } //ENDIF
+
+        // Other days
+          //if birthday is not today
+          if($filled == FALSE) {
+
+            //check if the current date is the same as the last
+            if((substr($row['Birthday'],8,2).".".substr($row['Birthday'],5,2)) == $date){
+              $doubleDate = TRUE;
+            } else {
+              $doubleDate = FALSE;
+            }
+            $date = substr($row['Birthday'],8,2).".".substr($row['Birthday'],5,2);
+
+            //Generate weekday from unix-timestamp and translate english weekdays to german
+            $weekday = date('l', strtotime(date('Y')."-".substr($row['Birthday'],5,2)."-".substr($row['Birthday'],8,2)));
+            $weekday = strtr($weekday, $trans);
+
+            $age = date('Y') - substr($row['Birthday'],0,4);
+           ?>
           <tr>
-            <td></td>
-            <td></td>
-            <td>Heribert Breidsamer</td>
-            <td>45</td>
-          </tr> <!-- End of Day 1 -->
-
-          <tr> <!-- Day 2 -->
-            <td>15.08</td>
-            <td>Mittwoch</td>
-            <td>Maria Magdalena</td>
-            <td>102</td>
-          </tr> <!-- End of Day 2 -->
-
-          <tr> <!-- Day 3 -->
-            <td>20.08</td>
-            <td>Montag</td>
-            <td>Jesus von Nazareth</td>
-            <td>2018</td>
-          </tr> <!-- End of Day 3 -->
-
+            <td><?php echo $doubleDate == TRUE ? "" : $date; ?></td>
+            <td><?php echo $doubleDate == TRUE ? "" : $weekday; ?></td>
+            <td><?php echo "{$row['Firstname']} {$row['Lastname']}";?></td>
+            <td><?php echo $age; ?></td>
+          </tr><!-- End of other days -->
+          <?php
+            } //ENDIF
+            $filled = FALSE;
+          } //ENDFOREACH
+        }?>
 
         </tbody>
       </table>

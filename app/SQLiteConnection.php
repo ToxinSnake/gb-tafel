@@ -56,6 +56,7 @@ class SQLiteConnection{
     $configs = include('config.php');
     $path = "../".$configs['PATH_TO_SQLITE_FILE'];
 
+
     if(file_exists($path)){
       try{
         $dbh = new PDO("sqlite:".$path);
