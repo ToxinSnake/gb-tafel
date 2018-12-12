@@ -36,6 +36,7 @@ class SQLiteConnection{
         $pdo = new PDO("sqlite:".$path);
       } //endtry
       catch (PDOException $e){
+        print($e->getMessage());
         return self::CREATION_FAILED;
       } //endcatch
 

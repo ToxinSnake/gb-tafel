@@ -10,11 +10,11 @@ function connect(){
       return $dbh;
     } //endtry
     catch (PDOException $e){
-      return self::CONNECTION_FAILED;
+      return CONNECTION_FAILED;
     } //endcatch
   }
   else {
-    return self::DB_DOES_NOT_EXISTS;
+    return DB_DOES_NOT_EXISTS;
   } //endelse
 }
 
