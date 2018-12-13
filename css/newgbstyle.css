@@ -26,6 +26,7 @@ body {
   border: 0;
   border-left: 3px;
   border-style: solid;
+  line-height: 2;
 }
 
 #left {

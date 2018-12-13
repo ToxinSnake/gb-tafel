@@ -6,8 +6,13 @@ include "./app/board_methods.php";
 
 setlocale (LC_ALL, 'de_DE');
 
-$bdset = getCurrentAndUpcoming();
-if(empty($bdset)){
+$bdsetPast = array_reverse(getPast()->fetchAll());
+$bdsetUpcoming = getCurrentAndUpcoming();
+$date = 0;
+$currentDay = strtr(date('l'), $trans);
+$currentDate = date('d.m.Y');
+
+if(empty($bdsetUpcoming)){
   $msg = "Keine Verbindung zur Datenbank möglich.";
 }
 
@@ -32,7 +37,7 @@ if(empty($bdset)){
   <link href="//fonts.googleapis.com/css?family=Raleway:400,300,600" rel="stylesheet" type="text/css">
 
   <!-- CSS
-  –––––––––––––––––––––––––––––––––––––––––––––––––– -->
+  –––––––––––––––––––––––––––––––––––––––––––––––––– -->  
   <link rel="stylesheet" href="css/normalize.css">
   <link rel="stylesheet" href="css/skeleton.css">
   <link rel="stylesheet" href="css/newgbstyle.css">
@@ -40,15 +45,19 @@ if(empty($bdset)){
   <!-- Favicon
   –––––––––––––––––––––––––––––––––––––––––––––––––– -->
   <link rel="icon" type="image/png" href="images/favicon.png">
+  
+  <!-- Javascript -->
+  <meta http-equiv="refresh" content="3600" />
+  <script src="js/clock.js"></script> 
 
 </head>
-<body>
+<body onload="startTime()">
   <div class="row">
 
     <div class="twelve columns" id="header">
       <img src="images/trauco.png">
-      <h4>12:45 Uhr<br>
-        Donnerstag, 09.08.2018</h4>
+      <h4 id="clock"></h4><br>
+      <h4 style="margin-top: 10px"><?php echo "$currentDay, $currentDate"?></h4>
 
     </div>
 
@@ -61,37 +70,34 @@ if(empty($bdset)){
           <th>Alter</th>
         </thead>
         <tbody>
-          <tr> <!-- Day -2 -->
-            <td>07.08</td>
-            <td>Dienstag</td>
-            <td>Arne Otten</td>
-            <td>24</td>
-          </tr>
-          <tr>
-            <td></td>
-            <td></td>
-            <td>Pia Flessner</td>
-            <td>21</td>
-          </tr>
-          <!-- End of Day -2 -->
-
-          <tr> <!-- Day -1 -->
-            <td>08.08</td>
-            <td>Mittwoch</td>
-            <td>Lars Meyerhoff</td>
-            <td>41</td>
-          </tr> <!-- End of Day -1 -->
-
-          <!-- Current day -->
-          <?php
-          if($bdset instanceof PDOStatement){
-            foreach ($bdset as $row){
-              ?>
-          <tr class="current">
-            <?php
-              if(date('m-d') == substr($row['Birthday'],5,5)){
-                $filled = TRUE; //needed to not have double entries
-
+        <?php 
+        //Past Birthdays
+        foreach ($bdsetPast as $row){
+            //check if the current date is the same as the last
+            if((substr($row['Birthday'],8,2).".".substr($row['Birthday'],5,2)) == $date){
+                $doubleDate = TRUE;
+            } else {
+                $doubleDate = FALSE;
+            }
+            $date = substr($row['Birthday'],8,2).".".substr($row['Birthday'],5,2);
+                
+            //Generate weekday from unix-timestamp and translate english weekdays to german
+            $weekday = date('l', strtotime(date('Y')."-".substr($row['Birthday'],5,2)."-".substr($row['Birthday'],8,2)));
+            $weekday = strtr($weekday, $trans);              
+            $age = date('Y') - substr($row['Birthday'],0,4);               
+            ?>
+            <tr>
+             	<td><?php echo $doubleDate == TRUE ? "" : $date; ?></td>
+            	<td><?php echo $doubleDate == TRUE ? "" : $weekday; ?></td>
+            	<td><?php echo "{$row['Firstname']} {$row['Lastname']}";?></td>
+            	<td><?php echo $age; ?></td>
+          	</tr>
+ 			<?php 
+            } //END IF
+   
+        //Current and Upcoming Birthdays
+        foreach ($bdsetUpcoming as $row){
+            if(date('m-d') == substr($row['Birthday'],5,5)){
                 //check if the current date is the same as the last
                 if((substr($row['Birthday'],8,2).".".substr($row['Birthday'],5,2)) == $date){
                   $doubleDate = TRUE;
@@ -107,16 +113,17 @@ if(empty($bdset)){
                 //calculate age
                 $age = date('Y') - substr($row['Birthday'],0,4);
             ?>
+		<tr class="current"> 
             <td><?php echo $doubleDate == TRUE ? "" : $date; ?></td>
             <td><?php echo $doubleDate == TRUE ? "" : $weekday; ?></td>
             <td><?php echo "{$row['Firstname']} {$row['Lastname']}";?></td>
             <td><?php echo $age; ?></td>
-          </tr> <!-- End of current day -->
+		</tr> 
         <?php } //ENDIF
 
         // Other days
           //if birthday is not today
-          if($filled == FALSE) {
+          else {
 
             //check if the current date is the same as the last
             if((substr($row['Birthday'],8,2).".".substr($row['Birthday'],5,2)) == $date){
@@ -142,7 +149,7 @@ if(empty($bdset)){
             } //ENDIF
             $filled = FALSE;
           } //ENDFOREACH
-        }?>
+        ?>
 
         </tbody>
       </table>
