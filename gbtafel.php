@@ -3,19 +3,33 @@
 
 <?php
 include "./app/board_methods.php";
+$configs = include ('./app/config.php');
 
 setlocale (LC_ALL, 'de_DE');
 
+//Geburtstage
 $bdsetPast = array_reverse(getPast()->fetchAll());
 $bdsetUpcoming = getCurrentAndUpcoming();
 $date = 0;
 $currentDay = strtr(date('l'), $trans);
 $currentDate = date('d.m.Y');
-
 if(empty($bdsetUpcoming)){
   $msg = "Keine Verbindung zur Datenbank möglich.";
 }
 
+//Nachrichten
+$feed = $configs['FEED'];
+$NUMITEMS = 3;
+
+//Read each feed's items
+$entries = array();
+$xml = simplexml_load_file($feed);
+$entries = array_merge($entries, $xml->xpath("//item"));
+
+//Sort feed entries by pubDate
+usort($entries, function ($feed1, $feed2) {
+    return strtotime($feed2->pubDate) - strtotime($feed1->pubDate);
+});
 ?>
 
 <html lang="en">
@@ -72,6 +86,7 @@ if(empty($bdsetUpcoming)){
         <tbody>
         <?php 
         //Past Birthdays
+        $count = 1;
         foreach ($bdsetPast as $row){
             //check if the current date is the same as the last
             if((substr($row['Birthday'],8,2).".".substr($row['Birthday'],5,2)) == $date){
@@ -86,13 +101,14 @@ if(empty($bdsetUpcoming)){
             $weekday = strtr($weekday, $trans);              
             $age = date('Y') - substr($row['Birthday'],0,4);               
             ?>
-            <tr>
+            <tr <?php if($count >= 3) echo "style=\"border-bottom: 5px solid black;\""?>>
              	<td><?php echo $doubleDate == TRUE ? "" : $date; ?></td>
             	<td><?php echo $doubleDate == TRUE ? "" : $weekday; ?></td>
             	<td><?php echo "{$row['Firstname']} {$row['Lastname']}";?></td>
             	<td><?php echo $age; ?></td>
           	</tr>
  			<?php 
+ 			$count++;
             } //END IF
    
         //Current and Upcoming Birthdays
@@ -156,29 +172,16 @@ if(empty($bdsetUpcoming)){
     </div>
 
     <div class="six columns" id="right">
+     <?php $count = 0;
+     foreach($entries as $entry){ ?>
       <article>
-        <h2>Nachricht des Tages</h2>
-        <p>Hackerman immernoch unentdeckt.</p>
+        <h2><?php echo $entry->title ?></h2>
+        <p><?php echo $entry->description ?></p>
+        <p class="createdDate"> <?php echo strftime('%d.%m.%Y %H:%M', strtotime($entry->pubDate)) ?> </p>
+        <p class="link"><a href="<?php echo $entry->link ?>">Link</a> (<?php echo parse_url($entry->link)['host'] ?>)</p>
       </article>
-
-      <article>
-        <h2>Mitarbeiterfest</h2>
-        <p>Jetzt sofort anmelden!</p>
-      </article>
-
-      <article>
-        <h2>Ganz langer Text</h2>
-        <p>Lorem ipsum dolor sit amet, consetetur sadipscing elitr, sed diam nonumy eirmod tempor
-          invidunt ut labore et dolore magna aliquyam erat, sed diam voluptua. At vero eos et accusam
-          et justo duo dolores et ea rebum. Stet clita kasd gubergren, no sea takimata sanctus est
-          Lorem ipsum dolor sit amet. Lorem ipsum dolor sit amet, consetetur sadipscing elitr, sed
-           diam nonumy eirmod tempor invidunt ut labore et dolore magna aliquyam erat, sed diam voluptua.
-            At vero eos et accusam et justo duo dolores et ea rebum. Stet clita kasd gubergren,
-            no sea takimata sanctus est Lorem ipsum dolor sit amet.At vero eos et accusam et justo duo dolores et ea rebum. Stet clita kasd gubergren,
-            no sea takimata sanctus est Lorem ipsum dolor sit amet.At vero eos et accusam et justo duo dolores et ea rebum. Stet clita kasd gubergren,
-            no sea takimata sanctus est Lorem ipsum dolor sit amet.At vero eos et accusam et justo duo dolores et ea rebum. Stet clita kasd gubergren,
-            no sea takimata sanctus est Lorem ipsum dolor sit amet.</p>
-      </article>
+      <?php if(++$count >= $NUMITEMS) break;    
+     }?>
     </div>
   </div>
 

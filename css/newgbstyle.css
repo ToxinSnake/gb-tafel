@@ -1,7 +1,7 @@
 /*
 * Made by Arne Otten
 * www.mj-12.net
-* 06/08/2018
+* 17/12/2018
 */
 
 body {
@@ -77,4 +77,20 @@ body {
   margin: 0 0 2em 0;
   padding: 10px;
   min-height: 100px;
+}
+
+#right article p.createdDate{
+  float: right;
+  position: absolute;
+  right: 1em;
+  bottom: 1%;
+  margin: 10px 0px 0px 0px;
+}
+
+#right article p.link{
+  float: left;
+  position: absolute;
+  left: 1em;
+  bottom: 1%;
+  margin: 10px 0px 0px 0px;
 }
