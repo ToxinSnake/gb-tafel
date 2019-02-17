@@ -21,6 +21,31 @@ h3{
   margin: 1em auto;
 }
 
+a.del{
+  border-radius: .25rem;
+  background-color: #dc3545;
+  padding: 10px 10px 10px 10px;
+}
+
+a.del:hover{
+  background-color: #c82333
+}
+
+a.edit{
+  border-radius: .25rem;
+  background-color: #007bff;
+  padding: 10px 10px 10px 10px;
+}
+
+a.edit:hover{
+  background-color: #0069d9;
+}
+
+img.icon-btn{
+  width: 22px;
+  vertical-align: -5px;
+}
+
 a.button.disabled{
   pointer-events: none;
   cursor: default;
@@ -51,11 +76,11 @@ table#resultTable form {
   margin-bottom: 0;
 }
 
-table#resultTable tr button{
+table#resultTable tr a{
   visibility: hidden;
 }
 
-table#resultTable tr:hover button{
+table#resultTable tr:hover a{
   visibility: visible;
 }
 

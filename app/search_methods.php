@@ -28,15 +28,10 @@ function showDefault(){
 
 
 function search($firstname, $lastname, $birthday){
-  if($firstname == NULL){
-    $firstname = "%";
-  }
-  if($lastname == NULL){
-    $lastname = "%";
-  }
-  if($birthday == NULL){
-    $birthday = "%";
-  }
+  //Implizites % hinten anhängen
+  $firstname .= "%";
+  $lastname .= "%";
+  $birthday .= "%";
 
   $pdo = (new SQLiteConnection())->connect();
   if(!($pdo instanceof PDO)){
