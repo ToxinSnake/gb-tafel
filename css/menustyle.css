@@ -28,7 +28,8 @@ a.del{
 }
 
 a.del:hover{
-  background-color: #c82333
+  background-color: #c82333;
+  cursor: pointer;
 }
 
 a.edit{
@@ -39,11 +40,16 @@ a.edit{
 
 a.edit:hover{
   background-color: #0069d9;
+  cursor: pointer;
 }
 
 img.icon-btn{
   width: 22px;
   vertical-align: -5px;
+}
+
+img.icon-btn:hover {
+  cursor: pointer;
 }
 
 a.button.disabled{
@@ -68,9 +74,7 @@ input {
   text-align: center;
 }
 
-img:hover {
-  cursor: pointer;
-}
+
 
 table#resultTable form {
   margin-bottom: 0;

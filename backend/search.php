@@ -37,9 +37,6 @@ else {
     $msg = $e->getMessage();
   }
 }
-
-
-
 ?>
 
 
@@ -49,7 +46,7 @@ else {
   <!-- Basic Page Needs
   –––––––––––––––––––––––––––––––––––––––––––––––––– -->
   <meta charset="utf-8">
-  <title>Geburtstag suchen</title>
+  <title>Geburtstage verwalten</title>
   <meta name="description" content="">
   <meta name="author" content="Arne Otten">
 
@@ -71,6 +68,7 @@ else {
   –––––––––––––––––––––––––––––––––––––––––––––––––– -->
   <script type="text/javascript" src="../js/jquery-3.3.1.js"></script>
   <script type="text/javascript" src="../js/jquery.tablesorter.min.js"></script>
+  <script type="text/javascript" src="../js/searchfunctions.js"></script>
 
 
   <!-- Favicon
@@ -84,7 +82,7 @@ else {
   –––––––––––––––––––––––––––––––––––––––––––––––––– -->
   <div class="container">
     <div class="row">
-      <h3>Geburtstag suchen</h3>       
+      <h3>Geburtstage verwalten</h3>       
       <form action="" method="get">
         <div class="four columns" >
           <input name="firstNameInput" placeholder="Vorname" type="text" autofocus>
@@ -129,17 +127,15 @@ else {
             //iterate over PDOStatement if connection to db is established
             if($resultset instanceof PDOStatement){
               foreach ($resultset as $row){ ?>
-              <tr>
+              <tr id=<?php echo $row['PNr'];?>>
                 <td><?php echo $row['Firstname'];?></td>
                 <td><?php echo $row['Lastname'];?></td>
                 <td></td>
                 <td></td>
                 <td><?php echo $row['Birthday'];?></td>
                 <td><form action="" method="post">
-                  <!--<button class="del" style="font-size: 9px;" name="del" type="submit" onclick="return confirm('Wirklich löschen?');" value="<?php echo $row['PNr'];?>">Löschen</button>-->
-                  <a class="del" id="delete" onclick="deleteEntry(<?php echo $row['PNr'];?>)"><img class="icon-btn" src="../images/delete.png"></a>
-                  <!--<button style="font-size: 9px;" name="edit" type="submit" formaction="change.php" value="<?php echo $row['PNr'];?>">Ändern</button>-->
-                  <a class="edit" id="edit" onclick="editEntry(<?php echo $row['PNr'];?>)"><img class="icon-btn" src="../images/edit.png"></a>
+                  <a class="del" onclick="deleteEntry(<?php echo $row['PNr'];?>)"><img class="icon-btn" src="../images/delete.png"></a>
+                  <a class="edit" onclick="editEntry(<?php echo $row['PNr'];?>)"><img class="icon-btn" src="../images/edit.png"></a>
                 </form></td>
               </tr>
         <?php }
@@ -157,16 +153,6 @@ $(document).ready(function()
     }
 );
 </script>
-<script>
-  function deleteEntry(pnr){
-    alert("Du willst "+pnr+" löschen!");
-  }
-
-  function editEntry(pnr){
-    alert("Du willst "+pnr+" bearbeiten!");
-  }
-</script>
-
 <!-- End Document
   –––––––––––––––––––––––––––––––––––––––––––––––––– -->
 </body>
