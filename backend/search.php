@@ -128,14 +128,15 @@ else {
             if($resultset instanceof PDOStatement){
               foreach ($resultset as $row){ ?>
               <tr id=<?php echo $row['PNr'];?>>
-                <td><?php echo $row['Firstname'];?></td>
-                <td><?php echo $row['Lastname'];?></td>
-                <td></td>
-                <td></td>
-                <td><?php echo $row['Birthday'];?></td>
+                <td><p id="fn-<?php echo $row['PNr'];?>"><?php echo $row['Firstname'];?></p><input type="text" id="edit-fn-<?php echo $row['PNr'];?>" value="<?php echo $row['Firstname'];?>"></td>
+                <td><p id="ln-<?php echo $row['PNr'];?>"><?php echo $row['Lastname'];?></p><input type="text" id="edit-ln-<?php echo $row['PNr'];?>" value="<?php echo $row['Lastname'];?>"></td>
+                <td><p id="cn-<?php echo $row['PNr'];?>"></p><input type="text" id="edit-cn-<?php echo $row['PNr'];?>" value=""></td><!-- Inputs noch füllen! -->
+                <td><p id="dn-<?php echo $row['PNr'];?>"></p><input type="text" id="edit-dn-<?php echo $row['PNr'];?>" value=""></td>
+                <td><p id="bd-<?php echo $row['PNr'];?>"><?php echo $row['Birthday'];?></p><input type="date" id="edit-bd-<?php echo $row['PNr'];?>" value="<?php echo $row['Birthday'];?>"></td>
                 <td><form action="" method="post">
                   <a class="del" onclick="deleteEntry(<?php echo $row['PNr'];?>)"><img class="icon-btn" src="../images/delete.png"></a>
-                  <a class="edit" onclick="editEntry(<?php echo $row['PNr'];?>)"><img class="icon-btn" src="../images/edit.png"></a>
+                  <a class="edit" onclick="editEntryStart(<?php echo $row['PNr'];?>)"><img class="icon-btn" src="../images/edit.png"></a>
+                  <a class="save" onclick="editEntryEnd(<?php echo $row['PNr'];?>)" id="save-<?php echo $row['PNr'];?>" onclick="editEntryStart(<?php echo $row['PNr'];?>)"><img class="icon-btn" src="../images/save.png"></a>
                 </form></td>
               </tr>
         <?php }

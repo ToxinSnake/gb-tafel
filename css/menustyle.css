@@ -43,6 +43,18 @@ a.edit:hover{
   cursor: pointer;
 }
 
+a.save{
+  border-radius: .25rem;
+  background-color: #28a745;
+  padding: 10px 10px 10px 10px;
+  display: none;
+}
+
+a.save:hover{
+  background-color: #218838;
+  cursor: pointer;
+}
+
 img.icon-btn{
   width: 22px;
   vertical-align: -5px;
@@ -74,10 +86,18 @@ input {
   text-align: center;
 }
 
-
+table#resultTable p {
+  margin-bottom: 0;
+}
 
 table#resultTable form {
   margin-bottom: 0;
+}
+
+table#resultTable input {
+  display: none;
+  min-width: 0px;
+  width: 9em;
 }
 
 table#resultTable tr a{
