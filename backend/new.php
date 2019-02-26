@@ -70,7 +70,7 @@ if(!empty($_POST["firstNameInput"]) && !empty($_POST["lastNameInput"]) && !empty
           <input type="date" name="birthdayInput" value="<?php echo isset($_POST["birthdayInput"]) ? htmlspecialchars($_POST['birthdayInput']) : '' ?>" placeholder="Geburtstag (YYYY-mm-dd)" maxlength="10" max="<?php echo date('Y-m-d') ?>" required>
           <input class="button-primary" value="Hinzufügen" type="submit">
         </form>
-        <a class="button button" href="edit.html">Zurück</a>
+        <a class="button button" href="search.php">Zurück</a>
     </div>
   </div>
 </div>

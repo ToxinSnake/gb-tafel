@@ -98,7 +98,8 @@ else {
         </div>
       </form>
       <div class="twelve columns" style="text-align: center">
-        <a class="button button" href="edit.html">Zurück</a>
+        <a class="button button" href="new.php">Neuer Geburtstag</a>
+        <a class="button button" href="menu.html">Zurück</a>
       </div>
       <br>
     </div>
@@ -132,7 +133,7 @@ else {
                 <td><p id="ln-<?php echo $row['PNr'];?>"><?php echo $row['Lastname'];?></p><input type="text" id="edit-ln-<?php echo $row['PNr'];?>" value="<?php echo $row['Lastname'];?>"></td>
                 <td><p id="cn-<?php echo $row['PNr'];?>"></p><input type="text" id="edit-cn-<?php echo $row['PNr'];?>" value=""></td><!-- Inputs noch füllen! -->
                 <td><p id="dn-<?php echo $row['PNr'];?>"></p><input type="text" id="edit-dn-<?php echo $row['PNr'];?>" value=""></td>
-                <td><p id="bd-<?php echo $row['PNr'];?>"><?php echo $row['Birthday'];?></p><input type="date" id="edit-bd-<?php echo $row['PNr'];?>" value="<?php echo $row['Birthday'];?>"></td>
+                <td><p id="bd-<?php echo $row['PNr'];?>"><?php echo $row['Birthday'];?></p><input type="date" id="edit-bd-<?php echo $row['PNr'];?>" value="<?php echo $row['Birthday'];?>" max="<?php echo date('Y-m-d') ?>"></td>
                 <td><form action="" method="post">
                   <a class="del" onclick="deleteEntry(<?php echo $row['PNr'];?>)"><img class="icon-btn" src="../images/delete.png"></a>
                   <a class="edit" onclick="editEntryStart(<?php echo $row['PNr'];?>)"><img class="icon-btn" src="../images/edit.png"></a>
