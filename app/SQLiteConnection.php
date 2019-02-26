@@ -21,11 +21,28 @@ class SQLiteConnection{
   public function create(){
     $configs = include('config.php');
     $path = "../".$configs['PATH_TO_SQLITE_FILE'];
-    $sqlInit = 'CREATE TABLE Person (
+    $sqlInit = 
+     'CREATE TABLE Person (
       PNr INTEGER PRIMARY KEY,
       Firstname TEXT NOT NULL,
       Lastname TEXT NOT NULL,
-      Birthday TEXT NOT NULL)';
+      Birthday TEXT NOT NULL,
+      Company INTEGER NOT NULL,
+      Department INTEGER);
+      
+      CREATE TABLE Company (
+      CNr INTEGER PRIMARY KEY,
+      CName TEXT  NOT NULL
+      );
+      
+      CREATE TABLE Department (
+      DNr INTEGER PRIMARY KEY,
+      DName TEXT NOT NULL);
+      
+      CREATE TABLE Company_Department (
+      CId INTEGER,
+      DId INTEGER
+      );';
     $pdo;
 
     if(file_exists($path)){
