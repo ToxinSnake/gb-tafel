@@ -11,6 +11,15 @@ function deleteEntry(pnr){
     }
   }
 
+function validateName(name){
+
+  if(!(name.match(/[A-Za-z]+/g))){
+    return false;
+  } else {
+    return true;
+  }
+}
+
 function editEntryStart(pnr){
 
   var textIds = ["fn-"+pnr, "ln-"+pnr, "cn-"+pnr, "dn-"+pnr, "bd-"+pnr];
@@ -43,14 +52,26 @@ function editEntryEnd(pnr){
 
   var textIds = ["fn-"+pnr, "ln-"+pnr, "cn-"+pnr, "dn-"+pnr, "bd-"+pnr];
   var inputIds = ["edit-fn-"+pnr, "edit-ln-"+pnr, "edit-cn-"+pnr, "edit-dn-"+pnr, "edit-bd-"+pnr];
+  var firstName = document.getElementById(inputIds[0]).value;
+  var lastName = document.getElementById(inputIds[1]).value;
+
+  //Validierung
+  if(validateName(firstName) == false){
+    alert("Vorname muss mindestens ein Zeichen enthalten und keine Zahl!");
+    return;
+  }
+  if(validateName(lastName) == false){
+    alert("Nachname muss mindestens ein Zeichen enthalten und keine Zahl!");
+    return;
+  }
 
   //ajax änderung durchführen
   $.ajax({
     type: "POST",
     url: 'search.php',
     data: { pnr: pnr,
-            changeFirstName: document.getElementById(inputIds[0]).value,
-            changeLastName: document.getElementById(inputIds[1]).value,
+            changeFirstName: firstName,
+            changeLastName: lastName,
             changeBirthday: document.getElementById(inputIds[4]).value},
     success: function(){
       //Inputs auf Texte übertragen
