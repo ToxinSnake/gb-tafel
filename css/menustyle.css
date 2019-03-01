@@ -21,6 +21,15 @@ h3{
   margin: 1em auto;
 }
 
+input[type="submit"].button-primary.delete {
+  background-color: #dc3545;
+  border-color: #dc3545;
+}
+
+input[type="submit"].button-primary.delete:hover {
+  background-color: #c82333;
+}
+
 a.del{
   border-radius: .25rem;
   background-color: #dc3545;
@@ -84,6 +93,11 @@ input, select{
 
 .twelve.columns#search{
   text-align: center;
+}
+
+.six.columns.manage{
+  text-align: center;
+  margin-left: 0%;
 }
 
 table#resultTable p {
