@@ -15,29 +15,33 @@ $msg = NULL;
 if(!empty($_POST["companyInput"])){
   try{
     $result = addCompanyToDb($_POST["companyInput"]);
+    if($result == true){
+      $msg = $_POST["companyInput"]." erfolgreich hinzugefügt!";
+    } else {
+      $msg = $_POST["companyInput"]." hinzugefügen gescheitert!";
+    } 
   } 
   catch (Exception $e){
     $msg = $e->getMessage();
   }
 
-  if($result == true){
-    $msg = $_POST["companyInput"]." erfolgreich hinzugefügt!";
-  }
-  
+
 //Abteilung hinzufügen
 } else if(!empty($_POST["departmentInput"]) && !empty($_POST["companyList"])){
   try{
     $result = addDepartmentToDb($_POST["companyList"] ,$_POST["departmentInput"]);
+    if($result == true){
+      $msg = $_POST["departmentInput"]." erfolgreich hinzugefügt!";
+    } else {
+      $msg = $_POST["departmentInput"]." hinzufügen gescheitert!";
+    }    
   }
   catch (Exception $e){
     $msg = $e->getMessage();
   }
 
-  if($result == true){
-    $msg = $_POST["departmentInput"]." erfolgreich hinzugefügt!";
-  } else {
-    $msg = $_POST["departmentInput"]." hinzufügen gescheitert!";
-  }
+//Firma löschen
+} else if(!!empty($_POST["delCompany"])){
 
 }
 ?>
@@ -69,6 +73,7 @@ if(!empty($_POST["companyInput"])){
     <!-- JS
   –––––––––––––––––––––––––––––––––––––––––––––––––– -->
   <script type="text/javascript" src="../js/jquery-3.3.1.js"></script>
+  <script type="text/javascript" src="../js/companiesfunctions.js"></script>
 
   <!-- Favicon
   –––––––––––––––––––––––––––––––––––––––––––––––––– -->
@@ -84,7 +89,7 @@ if(!empty($_POST["companyInput"])){
       
       <div class="twelve columns">
         <h3>Firmen/Abteilungen verwalten</h3>
-        <?php if(!empty($msg)){ ?> <p> <?php echo $msg; ?> </p> <?php } ?>
+        <?php if(!empty($msg)){ ?> <p class="response"> <?php echo $msg; ?> </p> <?php } ?>
       </div>
 
       <!-- Links -->
@@ -101,7 +106,7 @@ if(!empty($_POST["companyInput"])){
         </form>
 
         <form action="" method="post">
-          <select name="delDepCompany">
+          <select name="delDepCompany" onchange="departmentChange()">
             <?php 
             $companyList = getCompanies();
             foreach ($companyList as $company){ ?>
@@ -122,7 +127,7 @@ if(!empty($_POST["companyInput"])){
       <div class="six columns manage">
       
         <form action="" method="post" style="margin-bottom: 5em;">
-          <input type="text" name="companyInput" placeholder="Neue Firma"  maxlength="60" autofocus required>
+          <input type="text" name="companyInput" placeholder="Neue Firma" value="<?php echo isset($_POST["companyInput"]) ? htmlspecialchars($_POST['companyInput']) : '' ?>" maxlength="60" autofocus required>
           <input class="button-primary" value="Hinzufügen" type="submit">
         </form>
 
@@ -134,7 +139,7 @@ if(!empty($_POST["companyInput"])){
             <option value="<?php echo $company['CName']; ?>"><?php echo $company['CName']; ?></option>
             <?php } ?>
           </select>
-          <input type="text" name="departmentInput" placeholder="Neue Abteilung"  maxlength="60" required>
+          <input type="text" name="departmentInput" placeholder="Neue Abteilung" value="<?php echo isset($_POST["departmentInput"]) ? htmlspecialchars($_POST['departmentInput']) : '' ?>" maxlength="60" required>
           <input class="button-primary" value="Hinzufügen" type="submit">
         </form>
       </div>
@@ -147,27 +152,10 @@ if(!empty($_POST["companyInput"])){
   </div>
 <!-- End Document
   –––––––––––––––––––––––––––––––––––––––––––––––––– -->
-</body>
-<script type="text/javascript">
-jQuery(document).ready(function(){                
-// Sobald eine FirmajQuery(document).ready(function(){                
-// Sobald eine Firma ausgewählt wird
-    jQuery("select[name='delDepCompany']").change(function(){                
-                    
-        // get the selected option value of country
-        var optionValue = jQuery("select[name='delDepCompany']").val();     
-                                        
-        jQuery.ajax({
-            type: "GET",
-            url: "../app/cmp_ajaxlist.php",
-            data: "delDepCompany="+optionValue,
-            success: function(response){
-                jQuery("#depSelector").html(response);
-                //jQuery("#depSelector").show();
-            }
-        });             
-    });
-}); 
+<script>
+$(document).ready(function() {
+  departmentChange();
+});
 </script>
-
+</body>
 </html>
