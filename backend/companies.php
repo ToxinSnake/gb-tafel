@@ -41,8 +41,18 @@ if(!empty($_POST["companyInput"])){
   }
 
 //Firma löschen
-} else if(!!empty($_POST["delCompany"])){
-
+} else if(!empty($_POST["delCompany"])){
+  try{
+    $result = deleteCompany($_POST["delCompany"]);
+    if($result == true){
+      $msg = $_POST["delCompany"]." gelöscht!";
+    } else {
+      $msg = "Fehler beim löschen von ".$_POST["delCompany"]."!";
+    }    
+  }
+  catch (Exception $e){
+    $msg = $e->getMessage();
+  }
 }
 ?>
 
@@ -102,7 +112,7 @@ if(!empty($_POST["companyInput"])){
             <option value="<?php echo $company['CName']; ?>"><?php echo $company['CName']; ?></option>
             <?php } ?>
           </select>
-          <input class="button-primary delete" value="Firma löschen" type="submit">
+          <input class="button-primary delete" onclick="" value="Firma löschen" type="submit">
         </form>
 
         <form action="" method="post">

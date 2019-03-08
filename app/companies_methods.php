@@ -43,10 +43,7 @@ function companyHasDepartment($company, $department){
     }
 
    //ID der Company finden
-   $sql = 'SELECT CNr FROM Company WHERE CName IS :company';
-   $statement = $pdo->prepare($sql);
-   $statement->execute([':company' => $company]);
-   $CId = $statement->fetch()['CNr'];
+   $CId = getCompanyId($company);
 
    //ID der Abteilung holen, falls diese existiert
    $sql = 'SELECT DNr FROM Department WHERE DName IS :department';
@@ -93,10 +90,7 @@ function addDepartmentToDb($company, $department){
 
 
     //ID der Company finden
-    $sql = 'SELECT CNr FROM Company WHERE CName IS :company';
-    $statement = $pdo->prepare($sql);
-    $statement->execute([':company' => $company]);
-    $CId = $statement->fetch()['CNr'];
+    $CId = getCompanyId($company);
 
     //Abteilung einfügen
     $sql = 'INSERT INTO Department (Dname) VALUES (:department)';
@@ -126,6 +120,40 @@ function addDepartmentToDb($company, $department){
 
 }
 
+function deleteCompany($company){
+    $pdo = (new SQLiteConnection())->connect();
+    if(!($pdo instanceof PDO)){
+        throw new Exception("Verbindung zur DB gescheitert!");
+    }
+
+    //ID der Company finden
+    $CId = getCompanyId($company);
+
+    //Alle Department IDs finden
+    $sql = 'SELECT DId FROM Company_Department WHERE CId IS :cid';
+    $statement = $pdo->prepare($sql);
+    $statement->execute([':cid' => $CId]);
+    $depIds = $statement->fetchAll(PDO::FETCH_COLUMN, 0);
+
+    //String mit Anzahl so vielen ? erstellen wie $depIdsArray groß ist
+    $IdQstmark = implode(',', array_fill(0, count($depIds), '?'));
+
+    //Alle Abteilungen der Firma löschen
+    $sql = 'DELETE FROM Department WHERE DNr IN ('.$IdQstmark.')';
+    $statement = $pdo->prepare($sql);
+    foreach ($depIds as $k => $id){
+        $statement->bindValue(($k+1), $id);
+    }
+    $statement->execute();
+    
+    //Firma löschen
+    $sql = 'DELETE FROM Company WHERE CNr IS :cid';
+    $statement = $pdo->prepare($sql);
+    $statement->execute([':cid' => $CId]);
+    
+    return true;
+}
+
 function getCompanies(){
     $pdo = (new SQLiteConnection())->connect();
     if(!($pdo instanceof PDO)){
@@ -147,6 +175,21 @@ function getDepartments($company){
     $statement->execute([':company' => $company]);
 
     return $statement;
+}
+
+/*
+Hilfsmethode, gibt zu einer Company die passende ID zurück.
+*/
+function getCompanyId($company){
+    $pdo = (new SQLiteConnection())->connect();
+    if(!($pdo instanceof PDO)){
+        throw new Exception("Verbindung zur DB gescheitert!");
+    }
+
+    $sql = 'SELECT CNr FROM Company WHERE CName IS :company';
+    $statement = $pdo->prepare($sql);
+    $statement->execute([':company' => $company]);
+    return $statement->fetch()['CNr'];
 }
 
 ?>
