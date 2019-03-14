@@ -54,6 +54,9 @@ if(!empty($_POST["companyInput"])){
     $msg = $e->getMessage();
   }
 }
+
+//Abteilung löschen
+//TODO
 ?>
 
 <html lang="en">

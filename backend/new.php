@@ -11,9 +11,9 @@ include "../app/new_methods.php";
 
 $msg = NULL;
 
-if(!empty($_POST["firstNameInput"]) && !empty($_POST["lastNameInput"]) && !empty($_POST["birthdayInput"])){
+if(!empty($_POST["firstNameInput"]) && !empty($_POST["lastNameInput"]) && !empty($_POST["birthdayInput"]) && !empty($_POST["company"]) && !empty($_POST["department"])){
   try{
-    $result = addToDB($_POST["firstNameInput"], $_POST["lastNameInput"], $_POST["birthdayInput"]);
+    $result = addToDB($_POST["firstNameInput"], $_POST["lastNameInput"], $_POST["birthdayInput"], $_POST["company"], $_POST["department"]);
   }
   catch(Exception $e){
     $msg = $e->getMessage();
@@ -23,7 +23,8 @@ if(!empty($_POST["firstNameInput"]) && !empty($_POST["lastNameInput"]) && !empty
     $msg = "Hinzufügen erfolgreich!";
   }
 }
-
+//Alle Firmen für Iteration
+$companyList = getCompanies();
  ?>
 
 <html lang="en">
@@ -50,6 +51,11 @@ if(!empty($_POST["firstNameInput"]) && !empty($_POST["lastNameInput"]) && !empty
   <link rel="stylesheet" href="../css/skeleton.css">
   <link rel="stylesheet" href="../css/menustyle.css">
 
+  <!-- JS
+  –––––––––––––––––––––––––––––––––––––––––––––––––– -->
+  <script type="text/javascript" src="../js/jquery-3.3.1.js"></script>
+  <script type="text/javascript" src="../js/newfunctions.js"></script>
+
   <!-- Favicon
   –––––––––––––––––––––––––––––––––––––––––––––––––– -->
   <link rel="icon" type="image/png" href="../images/favicon.png">
@@ -68,6 +74,16 @@ if(!empty($_POST["firstNameInput"]) && !empty($_POST["lastNameInput"]) && !empty
           <input type="text" name="firstNameInput" value="<?php echo isset($_POST["firstNameInput"]) ? htmlspecialchars($_POST['firstNameInput']) : ''  ?>" placeholder="Vorname"  maxlength="40" autofocus required>
           <input type="text" name="lastNameInput" value="<?php echo isset($_POST["lastNameInput"]) ? htmlspecialchars($_POST['lastNameInput']) : '' ?>" placeholder="Nachname"  maxlength="40" required>
           <input type="date" name="birthdayInput" value="<?php echo isset($_POST["birthdayInput"]) ? htmlspecialchars($_POST['birthdayInput']) : '' ?>" placeholder="Geburtstag (YYYY-mm-dd)" maxlength="10" max="<?php echo date('Y-m-d') ?>" required>
+          <select name="company" onchange="departmentChange()">
+          <?php foreach ($companyList as $company){ ?> ?>
+            <option value="<?php echo $company['CName']; ?>"><?php echo $company['CName']; ?></option>
+          <?php } ?>
+          </select>
+          <div id="depSelector">
+            <select name="department">
+              <option value=""></option>
+            </select>
+          </div>
           <input class="button-primary" value="Hinzufügen" type="submit">
         </form>
         <a class="button button" href="search.php">Zurück</a>
@@ -76,5 +92,10 @@ if(!empty($_POST["firstNameInput"]) && !empty($_POST["lastNameInput"]) && !empty
 </div>
 <!-- End Document
   –––––––––––––––––––––––––––––––––––––––––––––––––– -->
+<script>
+  $(document).ready(function() {
+    departmentChange();
+  });
+</script>
 </body>
 </html>

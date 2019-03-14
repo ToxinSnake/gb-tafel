@@ -27,12 +27,11 @@ class SQLiteConnection{
       Firstname TEXT NOT NULL,
       Lastname TEXT NOT NULL,
       Birthday TEXT NOT NULL,
-      Company INTEGER NOT NULL,
-      Department INTEGER);
+      Company_Department INTEGER NOT NULL);
       
       CREATE TABLE Company (
       CNr INTEGER PRIMARY KEY,
-      CName TEXT  NOT NULL
+      CName TEXT NOT NULL
       );
       
       CREATE TABLE Department (
@@ -40,6 +39,7 @@ class SQLiteConnection{
       DName TEXT NOT NULL);
       
       CREATE TABLE Company_Department (
+      CoDeId INTEGER PRIMARY KEY,
       CId INTEGER,
       DId INTEGER
       );';

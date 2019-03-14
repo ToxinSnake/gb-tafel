@@ -19,12 +19,14 @@ if(!empty($_POST["firstNameInput"]) && !empty($_POST["lastNameInput"]) && !empty
     $msg = $e->getMessage();
   }
 
-  if($result == true){
+  if($result == true){ 
     $msg = "Hinzufügen erfolgreich!";
   }
 }
 
- ?>
+//Alle Firmen für Iteration
+$companyList = getCompanies();
+?>
 
 <html lang="en">
 <head>
@@ -50,6 +52,11 @@ if(!empty($_POST["firstNameInput"]) && !empty($_POST["lastNameInput"]) && !empty
   <link rel="stylesheet" href="../css/skeleton.css">
   <link rel="stylesheet" href="../css/menustyle.css">
 
+  <!-- JS
+  –––––––––––––––––––––––––––––––––––––––––––––––––– -->
+  <script type="text/javascript" src="../js/jquery-3.3.1.js"></script>
+  <script type="text/javascript" src="../js/newfunctions.js"></script>
+
   <!-- Favicon
   –––––––––––––––––––––––––––––––––––––––––––––––––– -->
   <link rel="icon" type="image/png" href="../images/favicon.png">
@@ -68,6 +75,16 @@ if(!empty($_POST["firstNameInput"]) && !empty($_POST["lastNameInput"]) && !empty
           <input type="text" name="firstNameInput" placeholder="Vorname"  maxlength="40" autofocus required>
           <input type="text" name="lastNameInput" placeholder="Nachname"  maxlength="40" required>
           <input name="birthdayInput" placeholder="Geburtstag (YYYY-mm-dd)" type="text" required>
+          <select name="company">
+          <?php foreach ($companyList as $company){ ?> ?>
+            <option value="<?php echo $company['CName']; ?>"><?php echo $company['CName']; ?></option>
+          <?php } ?>
+          </select>
+          <div id="depSelector">
+            <select name="department">
+              <option value=""></option>
+            </select>
+          </div>
           <input class="button-primary" value="Hinzufügen" type="submit">
         </form>
         <a class="button button" href="edit.html">Zurück</a>
@@ -76,5 +93,10 @@ if(!empty($_POST["firstNameInput"]) && !empty($_POST["lastNameInput"]) && !empty
 </div>
 <!-- End Document
   –––––––––––––––––––––––––––––––––––––––––––––––––– -->
+<script>
+  $(document).ready(function() {
+    departmentChange();
+  });
+</script>
 </body>
 </html>

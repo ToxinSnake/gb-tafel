@@ -45,26 +45,15 @@ function companyHasDepartment($company, $department){
    //ID der Company finden
    $CId = getCompanyId($company);
 
-   //ID der Abteilung holen, falls diese existiert
-   $sql = 'SELECT DNr FROM Department WHERE DName IS :department';
-   $statement = $pdo->prepare($sql);
-   $statement->execute([':department' => $department]);
-   $DId = $statement->fetch()['DNr'];
-
-   //Wird betreten wenn eine Abteilung mit diesem Namen existiert. Es muss jetzt noch geprüft werden, ob die Abteilung auch zur selben Firma gehört
-   if(!empty($DId)){ 
-       //In der junction-Tabelle schauen ob die Abteilung für diese Firma bereits existiert
-       $sql = 'SELECT * FROM Company_Department WHERE CId IS :cid AND DId IS :did';
-       $statement = $pdo->prepare($sql);
-       $statement->execute([':cid' => $CId, ':did' => $DId]);
-       if(count($statement->fetchAll()) != 0){
-           return true;
-       } else {
-           return false;
-       }
-   } else {
-       return false;
-   }
+    //In der junction-Tabelle schauen ob die Abteilung für diese Firma bereits existiert
+    $sql = 'SELECT * FROM Company_Department WHERE CId IS :cid AND DId IS (SELECT DNr FROM Department WHERE DName IS :department)';
+    $statement = $pdo->prepare($sql);
+    $statement->execute([':cid' => $CId, ':department' => $department]);
+    if(count($statement->fetchAll()) != 0){
+        return true;
+    } else {
+        return false;
+    }
 }
 
 function addDepartmentToDb($company, $department){

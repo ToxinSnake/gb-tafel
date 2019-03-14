@@ -46,12 +46,94 @@ function validateBirthday($birthday){
   }
 }
 
+function getCompanies(){
+  $pdo = (new SQLiteConnection())->connect();
+  if(!($pdo instanceof PDO)){
+      throw new Exception("Verbindung zur DB gescheitert!");
+  }
+  $sql = 'SELECT Cname FROM Company';
+  return $pdo->query($sql);
+}
+
+function getDepartments($company){
+  $pdo = (new SQLiteConnection())->connect();
+  if(!($pdo instanceof PDO)){
+      throw new Exception("Verbindung zur DB gescheitert!");
+  }
+
+  //Gibt alle Abteilungen der Firma zurück
+  $sql = 'SELECT DName FROM Department WHERE DNr IN (SELECT DId FROM Company_Department WHERE CId IS (SELECT CNr FROM Company WHERE CName IS :company));';
+  $statement = $pdo->prepare($sql);
+  $statement->execute([':company' => $company]);
+
+  return $statement;
+}
+
+/*
+Hilfsmethode, gibt zu einer Company die passende ID zurück.
+*/
+function getCompanyId($company){
+  $pdo = (new SQLiteConnection())->connect();
+  if(!($pdo instanceof PDO)){
+      throw new Exception("Verbindung zur DB gescheitert!");
+  }
+
+  $sql = 'SELECT CNr FROM Company WHERE CName IS :company';
+  $statement = $pdo->prepare($sql);
+  $statement->execute([':company' => $company]);
+  return $statement->fetch()['CNr'];
+}
+
+/*
+Hilfsmethode, gibt zu einem Department die passende ID zurück, sofern diese in der gewählten Firma existiert.
+*/
+function getDepartmentId($company, $department){
+
+  $pdo = (new SQLiteConnection())->connect();
+  if(!($pdo instanceof PDO)){
+      throw new Exception("Verbindung zur DB gescheitert!");
+  }
+
+ //ID der Company finden
+ $CId = getCompanyId($company);
+
+  //In der junction-Tabelle schauen ob die Abteilung zu der Firma gehört.
+  $sql = 'SELECT * FROM Company_Department WHERE CId IS :cid AND DId IS (SELECT DNr FROM Department WHERE DName IS :department)';
+  $statement = $pdo->prepare($sql);
+  $statement->execute([':cid' => $CId, ':department' => $department]);
+  $DId = $statement->fetch()['DId'];
+  if(!empty($DId)){
+    return $DId;
+  } else {
+    return false;
+  }
+}
+
+function getCompanyDepartmentId($company, $department) {
+  $pdo = (new SQLiteConnection())->connect();
+  if(!($pdo instanceof PDO)){
+    throw new Exception("Verbindung zur DB gescheitert!");
+  }
+
+  $CId = getCompanyId($company);
+  $DId = getDepartmentId($company, $department);
+
+  if($DId === false){
+    throw new Exception("Abteilung existiert in dieser Firma nicht!");
+  }
+
+  $sql = 'SELECT CoDeId FROM Company_Department WHERE CId IS :cid AND DId IS :did';
+  $statement = $pdo->prepare($sql);
+  $statement->execute([':cid' => $CId, ':did' => $DId]);
+  return $statement->fetch()['CoDeId'];
+}
+
 /**
 * Adds firstname, lastname and birthday to db.
 *
 */
 
-function addToDB($firstname, $lastname, $birthday){
+function addToDB($firstname, $lastname, $birthday, $company, $department){
 
   //Check firstname length
   validateFirstname($firstname);
@@ -61,6 +143,8 @@ function addToDB($firstname, $lastname, $birthday){
 
   //check if bday is in correct format and not in the future
   validateBirthday($birthday);
+
+  $CoDeId = getCompanyDepartmentId($company, $department);
 
   $date = $birthday;
 
@@ -75,12 +159,13 @@ function addToDB($firstname, $lastname, $birthday){
   }
 
   else{
-    $sql = 'INSERT INTO Person (Firstname, Lastname, Birthday) VALUES (:firstname, :lastname, :birthday)';
+    $sql = 'INSERT INTO Person (Firstname, Lastname, Birthday, Company_Department) VALUES (:firstname, :lastname, :birthday, :codeid)';
     $statement = $pdo->prepare($sql);
     $rtvalue = $statement->execute([ //TRUE on success, FALSE else
       ':firstname' => $firstname,
       ':lastname' => $lastname,
-      ':birthday' => $date
+      ':birthday' => $date,
+      ':codeid' => $CoDeId
     ]);
 
     return $rtvalue;

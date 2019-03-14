@@ -12,7 +12,7 @@ if(!$company) {
 $currentDepartments = getDepartments($company);
 
 ?> 
-<select name="delDepDepartment">
+<select name="department">
     <?php
         foreach($currentDepartments as $department) {
     ?>
