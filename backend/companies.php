@@ -107,18 +107,18 @@ if(!empty($_POST["companyInput"])){
 
       <!-- Links -->
       <div class="six columns manage">
-        <form action="" method="post" style="margin-bottom: 5em;">
-          <select name="delCompany">
+        <form action="" method="post" onsubmit="return confirmDeleteCompany('delCompany')" style="margin-bottom: 5em;">
+          <select name="delCompany" id="delCompany">
             <?php 
             $companyList = getCompanies();
             foreach ($companyList as $company){ ?>
             <option value="<?php echo $company['CName']; ?>"><?php echo $company['CName']; ?></option>
             <?php } ?>
           </select>
-          <input class="button-primary delete" onclick="" value="Firma löschen" type="submit">
+          <input class="button-primary delete" value="Firma löschen" type="submit">
         </form>
 
-        <form action="" method="post">
+        <form action="" method="post" onsubmit="return confirmDeleteDepartment('departmentList')">
           <select name="delDepCompany" onchange="departmentChange()">
             <?php 
             $companyList = getCompanies();
@@ -127,7 +127,7 @@ if(!empty($_POST["companyInput"])){
             <?php } ?>
           </select>
           <div id="depSelector">
-            <select name="delDepDepartment">
+            <select name="departmentList" id="departmentList">
               <option value=""></option>
             </select>
           </div>
