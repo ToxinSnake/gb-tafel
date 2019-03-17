@@ -6,7 +6,7 @@
 * 08/07/2018
 -->
 <?php
-include "../app/search_methods.php";
+require_once "../app/search_methods.php";
 
 //delete
 if(!empty($_POST["del"])){
@@ -37,6 +37,8 @@ else {
     $msg = $e->getMessage();
   }
 }
+//Alle Firmen für Iteration
+$companyList = getCompanies();
 ?>
 
 
@@ -93,6 +95,23 @@ else {
         <div class="four columns" >
           <input name="birthdayInput" placeholder="Geburtstag (YYYY-mm-dd)" type="text">
         </div>
+        <div class="four columns" style="margin-left: 0">
+          <select name="company" onchange="departmentChange()">
+            <option>Firma wählen...</option>
+            <?php foreach ($companyList as $company){ ?> ?>
+              <option value="<?php echo $company['CName']; ?>"><?php echo $company['CName']; ?></option>
+            <?php } ?>
+          </select>
+        </div>
+        <div class="four columns" >
+          <div id="depSelector">
+            <select>
+              <option>Abteilung wählen...</option>
+            </select>
+          </div>
+        </div>
+        <div class="four columns" >
+        </div>
         <div class="twelve columns" style="text-align: center"> 
           <input class="button-primary" value="Suchen" type="submit">
         </div>
@@ -131,8 +150,8 @@ else {
               <tr id=<?php echo $row['PNr'];?>>
                 <td><p id="fn-<?php echo $row['PNr'];?>"><?php echo $row['Firstname'];?></p><input type="text" id="edit-fn-<?php echo $row['PNr'];?>" value="<?php echo $row['Firstname'];?>"></td>
                 <td><p id="ln-<?php echo $row['PNr'];?>"><?php echo $row['Lastname'];?></p><input type="text" id="edit-ln-<?php echo $row['PNr'];?>" value="<?php echo $row['Lastname'];?>"></td>
-                <td><p id="cn-<?php echo $row['PNr'];?>"></p><input type="text" id="edit-cn-<?php echo $row['PNr'];?>" value=""></td><!-- Inputs noch füllen! -->
-                <td><p id="dn-<?php echo $row['PNr'];?>"></p><input type="text" id="edit-dn-<?php echo $row['PNr'];?>" value=""></td>
+                <td><p id="cn-<?php echo $row['PNr'];?>"><?php echo $row['CName'];?></p><input type="text" id="edit-cn-<?php echo $row['PNr'];?>" value=""></td><!-- Inputs noch füllen! -->
+                <td><p id="dn-<?php echo $row['PNr'];?>"><?php echo $row['DName'];?></p><input type="text" id="edit-dn-<?php echo $row['PNr'];?>" value=""></td>
                 <td><p id="bd-<?php echo $row['PNr'];?>"><?php echo $row['Birthday'];?></p><input type="date" id="edit-bd-<?php echo $row['PNr'];?>" value="<?php echo $row['Birthday'];?>" max="<?php echo date('Y-m-d') ?>"></td>
                 <td><form action="" method="post">
                   <a class="del" onclick="deleteEntry(<?php echo $row['PNr'];?>)"><img class="icon-btn" src="../images/delete.png"></a>
