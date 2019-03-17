@@ -1,23 +1,28 @@
 <?php
 //Gibt eine html select Liste mit Abteilungen für die jeweils angewählte Firma zurück
-//Nur über ajax aufrufbar
-include "companies_methods.php";
+//Falls GET-Parameter leer ist, wird ein leeres Select Feld zurückgegeben
+//Falls die Firma keine Abteilung besitzt, wird ein leeres Select Feld zurückgegeben
+require_once "shared_methods.php";
 
-$company = $_GET["delDepCompany"];
- 
-if(!$company) {
-    return false;
-}
- 
-$currentDepartments = getDepartments($company);
+$company = $_GET["company"];
 
+if(!(empty($company)) && getDepartmentsRowCount($company) != 0){
+    $currentDepartments = getDepartments($_GET["company"]);
 ?> 
-<select name="department">
-    <?php
-        foreach($currentDepartments as $department) {
-    ?>
+<select name="departmentList" id="departmentList">
+<?php
+    foreach($currentDepartments as $department) {
+?>
     <option value="<?php echo $department['DName']; ?>"><?php echo $department['DName']; ?></option>
-    <?php 
-        }
-    ?>
+<?php 
+    }
+?>
 </select>
+<?php
+} else {
+?>
+<select name="departmentList" id="departmentList" disabled>
+    <option value=""></option>
+</select>
+<?php 
+} ?>
