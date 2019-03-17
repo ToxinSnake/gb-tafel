@@ -27,7 +27,7 @@ class SQLiteConnection{
       Firstname TEXT NOT NULL,
       Lastname TEXT NOT NULL,
       Birthday TEXT NOT NULL,
-      Company_Department INTEGER NOT NULL);
+      Company_Department_Id INTEGER NOT NULL);
       
       CREATE TABLE Company (
       CNr INTEGER PRIMARY KEY,
