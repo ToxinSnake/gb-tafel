@@ -1,5 +1,6 @@
 <?php
-include "SQLiteConnection.php";
+require_once "SQLiteConnection.php";
+require_once "shared_methods.php";
 
 function addCompanyToDb($company){
 
@@ -33,27 +34,6 @@ function addCompanyToDb($company){
 
     return $rtvalue;
 
-}
-
-function companyHasDepartment($company, $department){
-
-    $pdo = (new SQLiteConnection())->connect();
-    if(!($pdo instanceof PDO)){
-        throw new Exception("Verbindung zur DB gescheitert!");
-    }
-
-   //ID der Company finden
-   $CId = getCompanyId($company);
-
-    //In der junction-Tabelle schauen ob die Abteilung für diese Firma bereits existiert
-    $sql = 'SELECT * FROM Company_Department WHERE CId IS :cid AND DId IS (SELECT DNr FROM Department WHERE DName IS :department)';
-    $statement = $pdo->prepare($sql);
-    $statement->execute([':cid' => $CId, ':department' => $department]);
-    if(count($statement->fetchAll()) != 0){
-        return true;
-    } else {
-        return false;
-    }
 }
 
 function addDepartmentToDb($company, $department){
@@ -118,6 +98,11 @@ function deleteCompany($company){
     //ID der Company finden
     $CId = getCompanyId($company);
 
+    //Alle Personen löschen
+    $sql = 'DELETE FROM Person WHERE Company_Department_Id IN (SELECT CoDeId FROM Company_Department WHERE CId IS :cid);';
+    $statement = $pdo->prepare($sql);
+    $statement->execute([':cid' => $CId]);
+
     //Alle Department IDs finden
     $sql = 'SELECT DId FROM Company_Department WHERE CId IS :cid';
     $statement = $pdo->prepare($sql);
@@ -136,49 +121,28 @@ function deleteCompany($company){
     $statement->execute();
     
     //Firma löschen
-    $sql = 'DELETE FROM Company WHERE CNr IS :cid';
+    $sql = 'DELETE FROM Company WHERE CNr IS :cid;';
     $statement = $pdo->prepare($sql);
     $statement->execute([':cid' => $CId]);
-    
+
+    //Einträge in Junctiontabelle löschen
+    $sql = 'DELETE FROM Company_Department WHERE CId IS :cid;';
+    $statement = $pdo->prepare($sql);
+    $statement->execute([':cid' => $CId]);
+
     return true;
 }
 
-function getCompanies(){
-    $pdo = (new SQLiteConnection())->connect();
-    if(!($pdo instanceof PDO)){
-        throw new Exception("Verbindung zur DB gescheitert!");
-    }
-    $sql = 'SELECT Cname FROM Company';
-    return $pdo->query($sql);
-}
-
-function getDepartments($company){
+function deleteDepartment($company, $department){
     $pdo = (new SQLiteConnection())->connect();
     if(!($pdo instanceof PDO)){
         throw new Exception("Verbindung zur DB gescheitert!");
     }
 
-    //Gibt alle Abteilungen der Firma zurück
-    $sql = 'SELECT DName FROM Department WHERE DNr IN (SELECT DId FROM Company_Department WHERE CId IS (SELECT CNr FROM Company WHERE CName IS :company));';
-    $statement = $pdo->prepare($sql);
-    $statement->execute([':company' => $company]);
+    //ID der Company und Department finden
+    $CId = getCompanyId($company);
+    $DId = getDepartmentId($company, $department);
 
-    return $statement;
+
 }
-
-/*
-Hilfsmethode, gibt zu einer Company die passende ID zurück.
-*/
-function getCompanyId($company){
-    $pdo = (new SQLiteConnection())->connect();
-    if(!($pdo instanceof PDO)){
-        throw new Exception("Verbindung zur DB gescheitert!");
-    }
-
-    $sql = 'SELECT CNr FROM Company WHERE CName IS :company';
-    $statement = $pdo->prepare($sql);
-    $statement->execute([':company' => $company]);
-    return $statement->fetch()['CNr'];
-}
-
 ?>
