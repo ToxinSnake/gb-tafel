@@ -4,7 +4,7 @@ function departmentChange(){
     jQuery.ajax({
       type: "GET",
       url: "../app/cmp_ajaxlist.php",
-      data: "delDepCompany="+optionValue,
+      data: "company="+optionValue,
       success: function(response){
         jQuery("#depSelector").html(response);
       }

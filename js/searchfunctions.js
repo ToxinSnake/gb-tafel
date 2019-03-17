@@ -1,15 +1,28 @@
-function deleteEntry(pnr){
-    if(confirm("Wirklich löschen?")){
-      $.ajax({
-        type: "POST",
-        url: 'search.php',
-        data: { del: pnr},
-        success: function(){
-            document.getElementById(pnr).style.display = "none";
-        }
-      });
+function departmentChange(){                               
+  // Sobald eine Firma ausgewählt wird               
+  var optionValue = jQuery("select[name='company']").val();                                             
+  jQuery.ajax({
+    type: "GET",
+    url: "../app/cmp_ajaxlist.php",
+    data: "company="+optionValue,
+    success: function(response){
+      jQuery("#depSelector").html(response);
     }
+  });
+} 
+
+function deleteEntry(pnr){
+  if(confirm("Wirklich löschen?")){
+    $.ajax({
+      type: "POST",
+      url: 'search.php',
+      data: { del: pnr},
+      success: function(){
+          document.getElementById(pnr).style.display = "none";
+      }
+    });
   }
+}
 
 function validateName(name){
 
