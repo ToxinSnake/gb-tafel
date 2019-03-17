@@ -11,9 +11,9 @@ include "../app/new_methods.php";
 
 $msg = NULL;
 
-if(!empty($_POST["firstNameInput"]) && !empty($_POST["lastNameInput"]) && !empty($_POST["birthdayInput"]) && !empty($_POST["company"]) && !empty($_POST["department"])){
+if(!empty($_POST["firstNameInput"]) && !empty($_POST["lastNameInput"]) && !empty($_POST["birthdayInput"]) && !empty($_POST["company"]) && !empty($_POST["departmentList"])){
   try{
-    $result = addToDB($_POST["firstNameInput"], $_POST["lastNameInput"], $_POST["birthdayInput"], $_POST["company"], $_POST["department"]);
+    $result = addToDB($_POST["firstNameInput"], $_POST["lastNameInput"], $_POST["birthdayInput"], $_POST["company"], $_POST["departmentList"]);
   }
   catch(Exception $e){
     $msg = $e->getMessage();
@@ -74,13 +74,13 @@ $companyList = getCompanies();
           <input type="text" name="firstNameInput" value="<?php echo isset($_POST["firstNameInput"]) ? htmlspecialchars($_POST['firstNameInput']) : ''  ?>" placeholder="Vorname"  maxlength="40" autofocus required>
           <input type="text" name="lastNameInput" value="<?php echo isset($_POST["lastNameInput"]) ? htmlspecialchars($_POST['lastNameInput']) : '' ?>" placeholder="Nachname"  maxlength="40" required>
           <input type="date" name="birthdayInput" value="<?php echo isset($_POST["birthdayInput"]) ? htmlspecialchars($_POST['birthdayInput']) : '' ?>" placeholder="Geburtstag (YYYY-mm-dd)" maxlength="10" max="<?php echo date('Y-m-d') ?>" required>
-          <select name="company" onchange="departmentChange()">
+          <select name="company" onchange="departmentChange()" >
           <?php foreach ($companyList as $company){ ?> ?>
             <option value="<?php echo $company['CName']; ?>"><?php echo $company['CName']; ?></option>
           <?php } ?>
           </select>
           <div id="depSelector">
-            <select name="department">
+            <select name="departmentList" id="departmentList">
               <option value=""></option>
             </select>
           </div>
