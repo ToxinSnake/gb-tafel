@@ -147,16 +147,25 @@ function deleteDepartment($company, $department){
     $sql = 'DELETE FROM Person WHERE Company_Department_Id IN (SELECT CoDeId FROM Company_Department WHERE DId IS :did);';
     $statement = $pdo->prepare($sql);
     $statement->execute([':did' => $DId]);
+    if($statement == false){
+        return false;
+    }
 
     //Abteilung löschen
     $sql = 'DELETE FROM Department WHERE DNr IS :did;';
     $statement = $pdo->prepare($sql);
     $statement->execute([':did' => $DId]);
+    if($statement == false){
+        return false;
+    }
 
     //Einträge in Junctiontabelle löschen
     $sql = 'DELETE FROM Company_Department WHERE DId IS :did;';
     $statement = $pdo->prepare($sql);
     $statement->execute([':did' => $DId]);
+    if($statement == false){
+        return false;
+    } 
 
     return true;
 }

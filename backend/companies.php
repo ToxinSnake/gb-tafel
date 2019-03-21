@@ -53,10 +53,16 @@ if(!empty($_POST["companyInput"])){
   catch (Exception $e){
     $msg = $e->getMessage();
   }
-}
 
 //Abteilung löschen
-//TODO
+} else if(!empty($_POST["delDepartment"]) && !empty($_POST["delDepCompany"])){
+  $result = deleteDepartment($_POST["delDepCompany"], $_POST["delDepartment"]);
+  if($result == true){
+    $msg = $_POST["delDepartment"]." gelöscht!";
+  } else {
+    $msg = "Fehler beim löschen von ".$_POST["delDepartment"]."!";
+  }    
+}
 ?>
 
 <html lang="en">
