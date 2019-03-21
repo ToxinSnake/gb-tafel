@@ -31,28 +31,38 @@ function showDefault(){
 }
 
 
-function search($firstname, $lastname, $birthday){
+function search($firstname, $lastname, $birthday, $company, $department){
   //Implizites % hinten anhängen
   $firstname .= "%";
   $lastname .= "%";
   $birthday .= "%";
+  if(empty($company)) $company = "%";
+  if(empty($department)) $department = "%";
+
+  //error_log("Firstname:".$firstname."Lastname:".$lastname." Birthday:".$birthday." Company:".$company." Department:".$department."\n", 3, "/var/www/html/gb-tafel/log/php.log");
 
   $pdo = (new SQLiteConnection())->connect();
   if(!($pdo instanceof PDO)){
     throw new Exception("Verbindung zu DB fehlgeschlagen!");
   }
 
-  $sql = "SELECT PNr, Firstname, Lastname, Birthday
-  FROM Person
-  WHERE Firstname LIKE :firstname
-  AND Lastname LIKE :lastname
-  AND Birthday LIKE :birthday
-  LIMIT 10";
+  $sql = "SELECT Person.PNr, Person.Firstname, Person.Lastname, Company.CName, Department.DName, Person.Birthday 
+  FROM Person 
+  INNER JOIN Company_Department ON Person.Company_Department_Id IS Company_Department.CoDeId
+  INNER JOIN Company ON CId IS Company.CNr
+  INNER JOIN Department ON DId IS Department.DNr
+  WHERE Person.Firstname LIKE :firstname 
+  AND Person.Lastname LIKE :lastname 
+  AND Person.Birthday LIKE :birthday 
+  AND Company.CName LIKE :company 
+  AND Department.DName LIKE :department;";
   $statement = $pdo->prepare($sql);
   $statement->execute([ //TRUE on success, FALSE else
     ':firstname' => $firstname,
     ':lastname' => $lastname,
-    ':birthday' => $birthday
+    ':birthday' => $birthday,
+    ':company' => $company,
+    ':department' => $department
   ]);
 
   return $statement;
@@ -71,50 +81,6 @@ function delete($Pnr){
   return $statement;
 
 }
-
-// function validateFirstname($firstname){
-//   $configs = include('config.php');
-//   $firstNameLength = $configs['MAX_FIRST_NAME_LENGTH'];
-
-//   if(mb_strlen($firstname) == 0){
-//     throw new Exception("Vorname muss mindestens ein Zeichen beinhalten!");
-//   }
-
-//   if(mb_strlen($firstname) > $firstNameLength ){
-//     throw new Exception("Vorname zu lang!");
-//   }
-// }
-
-// function validateLastname($lastname){
-//   $configs = include('config.php');
-//   $lastNameLength = $configs['MAX_LAST_NAME_LENGTH'];
-
-//   if(mb_strlen($lastname) == 0){
-//     throw new Exception("Nachname muss mindestens ein Zeichen beinhalten!");
-//   }
-
-//   if(mb_strlen($lastname) > $lastNameLength){
-//     throw new Exception("Nachname zu lang!");
-//   }
-// }
-
-// function validateBirthday($birthday){
-//   // Checks for the following format: yyyy-mm-dd
-//   $regex_pattern = "/[0-9]{4}-[0-9]{2}-[0-9]{2}/";
-
-//   //the === operator also checks for type compatibility
-//   if(preg_match($regex_pattern, $birthday) === 0){
-//     throw new Exception("Datum muss im Format YYYY-mm-dd vorliegen!");
-//   }
-
-//   // Check if the date is in the past
-//   $date = new DateTime($birthday);
-//   $now = new DateTime();
-  
-//   if($date > $now){
-//     throw new Exception("Datum liegt in der Zukunft!");
-//   }
-// }
 
 function changeToDB($pnr, $firstname, $lastname, $birthday){
 

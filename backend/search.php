@@ -31,7 +31,7 @@ if(empty($_GET)){
 //search
 else {
   try{
-    $resultset = search($_GET["firstNameInput"], $_GET["lastNameInput"], $_GET["birthdayInput"]);
+    $resultset = search($_GET["firstNameInput"], $_GET["lastNameInput"], $_GET["birthdayInput"], $_GET["company"], $_GET["departmentList"]);
   }
   catch(Exception $e){
     $msg = $e->getMessage();
@@ -93,11 +93,11 @@ $companyList = getCompanies();
           <input name="lastNameInput" placeholder="Nachname" type="text">
         </div> 
         <div class="four columns" >
-          <input name="birthdayInput" placeholder="Geburtstag (YYYY-mm-dd)" type="text">
+          <input name="birthdayInput" placeholder="" type="date">
         </div>
         <div class="four columns" style="margin-left: 0">
           <select name="company" onchange="departmentChange()">
-            <option>Firma wählen...</option>
+            <option value="">Firma wählen...</option>
             <?php foreach ($companyList as $company){ ?> ?>
               <option value="<?php echo $company['CName']; ?>"><?php echo $company['CName']; ?></option>
             <?php } ?>
@@ -105,8 +105,8 @@ $companyList = getCompanies();
         </div>
         <div class="four columns" >
           <div id="depSelector">
-            <select>
-              <option>Abteilung wählen...</option>
+            <select name="departmentList" id="departmentList">
+              <option value="">Abteilung wählen...</option>
             </select>
           </div>
         </div>

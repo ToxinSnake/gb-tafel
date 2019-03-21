@@ -87,6 +87,7 @@ if(!empty($_POST["companyInput"])){
   –––––––––––––––––––––––––––––––––––––––––––––––––– -->
   <script type="text/javascript" src="../js/jquery-3.3.1.js"></script>
   <script type="text/javascript" src="../js/companiesfunctions.js"></script>
+  <script type="text/javascript" src="../js/sharefunctions.js"></script>
 
   <!-- Favicon
   –––––––––––––––––––––––––––––––––––––––––––––––––– -->
@@ -119,7 +120,7 @@ if(!empty($_POST["companyInput"])){
         </form>
 
         <form action="" method="post" onsubmit="return confirmDeleteDepartment('departmentList')">
-          <select name="delDepCompany" onchange="departmentChange()">
+          <select name="delDepCompany" onchange="departmentChange('delDepCompany', 'delDepartment', 'depSelector')">
             <?php 
             $companyList = getCompanies();
             foreach ($companyList as $company){ ?>
@@ -127,7 +128,7 @@ if(!empty($_POST["companyInput"])){
             <?php } ?>
           </select>
           <div id="depSelector">
-            <select name="departmentList" id="departmentList">
+            <select name="delDepartment">
               <option value=""></option>
             </select>
           </div>
@@ -167,7 +168,7 @@ if(!empty($_POST["companyInput"])){
   –––––––––––––––––––––––––––––––––––––––––––––––––– -->
 <script>
 $(document).ready(function() {
-  departmentChange();
+  departmentChange('delDepCompany', 'delDepartment', 'depSelector');
 });
 </script>
 </body>

@@ -5,11 +5,12 @@
 require_once "shared_methods.php";
 
 $company = $_GET["company"];
+$depSelectName = $_GET["depSelectName"];
 
 if(!(empty($company)) && getDepartmentsRowCount($company) != 0){
     $currentDepartments = getDepartments($_GET["company"]);
 ?> 
-<select name="departmentList" id="departmentList">
+<select name="<?php echo $depSelectName ?>">
 <?php
     foreach($currentDepartments as $department) {
 ?>
@@ -21,7 +22,7 @@ if(!(empty($company)) && getDepartmentsRowCount($company) != 0){
 <?php
 } else {
 ?>
-<select name="departmentList" id="departmentList" disabled>
+<select name="<?php echo $depSelectName ?>" disabled>
     <option value=""></option>
 </select>
 <?php 

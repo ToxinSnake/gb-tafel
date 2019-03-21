@@ -54,7 +54,7 @@ $companyList = getCompanies();
   <!-- JS
   –––––––––––––––––––––––––––––––––––––––––––––––––– -->
   <script type="text/javascript" src="../js/jquery-3.3.1.js"></script>
-  <script type="text/javascript" src="../js/newfunctions.js"></script>
+  <script type="text/javascript" src="../js/sharefunctions.js"></script>
 
   <!-- Favicon
   –––––––––––––––––––––––––––––––––––––––––––––––––– -->
@@ -74,13 +74,13 @@ $companyList = getCompanies();
           <input type="text" name="firstNameInput" value="<?php echo isset($_POST["firstNameInput"]) ? htmlspecialchars($_POST['firstNameInput']) : ''  ?>" placeholder="Vorname"  maxlength="40" autofocus required>
           <input type="text" name="lastNameInput" value="<?php echo isset($_POST["lastNameInput"]) ? htmlspecialchars($_POST['lastNameInput']) : '' ?>" placeholder="Nachname"  maxlength="40" required>
           <input type="date" name="birthdayInput" value="<?php echo isset($_POST["birthdayInput"]) ? htmlspecialchars($_POST['birthdayInput']) : '' ?>" placeholder="Geburtstag (YYYY-mm-dd)" maxlength="10" max="<?php echo date('Y-m-d') ?>" required>
-          <select name="company" onchange="departmentChange()" >
+          <select name="company" onchange="departmentChange('company', 'department', 'depSelector')" >
           <?php foreach ($companyList as $company){ ?> ?>
             <option value="<?php echo $company['CName']; ?>"><?php echo $company['CName']; ?></option>
           <?php } ?>
           </select>
           <div id="depSelector">
-            <select name="departmentList" id="departmentList">
+            <select name="department">
               <option value=""></option>
             </select>
           </div>
@@ -94,7 +94,7 @@ $companyList = getCompanies();
   –––––––––––––––––––––––––––––––––––––––––––––––––– -->
 <script>
   $(document).ready(function() {
-    departmentChange();
+    departmentChange('company', 'department', 'depSelector');
   });
 </script>
 </body>
