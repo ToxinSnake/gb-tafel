@@ -68,6 +68,18 @@ a.save:hover{
   cursor: pointer;
 }
 
+a.abort{
+  border-radius: .25rem;
+  background-color: #dc3545;
+  padding: 10px 10px 10px 10px;
+  display: none;
+}
+
+a.abort:hover{
+  background-color: #c82333;
+  cursor: pointer;
+}
+
 img.icon-btn{
   width: 22px;
   vertical-align: -5px;
@@ -113,6 +125,12 @@ table#resultTable form {
 }
 
 table#resultTable input {
+  display: none;
+  min-width: 0px;
+  width: 9em;
+}
+
+table#resultTable select {
   display: none;
   min-width: 0px;
   width: 9em;

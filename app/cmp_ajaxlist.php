@@ -6,15 +6,25 @@ require_once "shared_methods.php";
 
 $company = $_GET["company"];
 $depSelectName = $_GET["depSelectName"];
+$depSelectId = $_GET["depSelectId"];
+if(!empty($_GET["PNr"])) $Pnr = $_GET["PNr"];
+$associatedDepartment = "";
 
+//Benötigt, damit der selected Attribut gesetzt werden kann in der Suchtabelle
+if(isset($Pnr)){
+    $associatedDepartment = findDepartmentForPerson($Pnr);
+}
+
+//Wenn Firma auch Abteilungen hat, ansonsten Leeres Select
 if(!(empty($company)) && getDepartmentsRowCount($company) != 0){
     $currentDepartments = getDepartments($_GET["company"]);
+    
 ?> 
-<select name="<?php echo $depSelectName ?>">
+<select name="<?php echo $depSelectName ?>" id="<?php echo $depSelectId ?>">
 <?php
     foreach($currentDepartments as $department) {
 ?>
-    <option value="<?php echo $department['DName']; ?>"><?php echo $department['DName']; ?></option>
+    <option value="<?php echo $department['DName']; ?>"<?php if($associatedDepartment == $department['DName']) echo " selected"; ?>><?php echo $department['DName']; ?></option>
 <?php 
     }
 ?>
@@ -22,7 +32,7 @@ if(!(empty($company)) && getDepartmentsRowCount($company) != 0){
 <?php
 } else {
 ?>
-<select name="<?php echo $depSelectName ?>" disabled>
+<select name="<?php echo $depSelectName ?>" id="<?php echo $depSelectId ?>" disabled>
     <option value=""></option>
 </select>
 <?php 

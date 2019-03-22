@@ -105,6 +105,10 @@ function getDepartmentId($company, $department){
     }
   }
   
+
+  /*
+  Gibt die CoDeId für ein Firmen-Abteilungs Tuple zurück. Diese ist wichtig für das Eintragen neuer Personen.
+  */
   function getCompanyDepartmentId($company, $department) {
     $pdo = (new SQLiteConnection())->connect();
     if(!($pdo instanceof PDO)){
@@ -123,6 +127,42 @@ function getDepartmentId($company, $department){
     $statement->execute([':cid' => $CId, ':did' => $DId]);
     return $statement->fetch()['CoDeId'];
   }
+
+function findCompanyForPerson($Pnr){
+  $pdo = (new SQLiteConnection())->connect();
+  if(!($pdo instanceof PDO)){
+    throw new Exception("Verbindung zu DB fehlgeschlagen!");
+  }
+  
+  $sql = "SELECT Company.CName 
+  FROM Person 
+  INNER JOIN Company_Department ON Person.Company_Department_Id IS Company_Department.CoDeId
+  INNER JOIN Company ON CId IS Company.CNr
+  INNER JOIN Department ON DId IS Department.DNr
+  WHERE Person.PNr IS :pnr;";
+  $statement = $pdo->prepare($sql);
+  $statement->execute([':pnr' => $Pnr]);
+  
+  return $statement->fetchAll()[0][0];
+}
+
+function findDepartmentForPerson($Pnr){
+  $pdo = (new SQLiteConnection())->connect();
+  if(!($pdo instanceof PDO)){
+    throw new Exception("Verbindung zu DB fehlgeschlagen!");
+  }
+
+  $sql = "SELECT Department.DName 
+  FROM Person 
+  INNER JOIN Company_Department ON Person.Company_Department_Id IS Company_Department.CoDeId
+  INNER JOIN Company ON CId IS Company.CNr
+  INNER JOIN Department ON DId IS Department.DNr
+  WHERE Person.PNr IS :pnr;";
+  $statement = $pdo->prepare($sql);
+  $statement->execute([':pnr' => $Pnr]);
+  
+  return $statement->fetchAll()[0][0];
+}
 
 function validateFirstname($firstname){
     $configs = include('config.php');

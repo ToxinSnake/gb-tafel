@@ -13,9 +13,9 @@ if(!empty($_POST["del"])){
   $resultset = delete($_POST["del"]);
 }
 //edit
-if(!empty($_POST["pnr"]) && !empty($_POST["changeFirstName"]) && !empty($_POST["changeLastName"]) && !empty($_POST["changeBirthday"])){
+if(!empty($_POST["pnr"]) && !empty($_POST["changeFirstName"]) && !empty($_POST["changeLastName"]) && !empty($_POST["changeBirthday"]) && !empty($_POST["changeCompany"]) && !empty($_POST["changeDepartment"])){
   try{
-    $changeResult = changeToDB($_POST["pnr"], $_POST["changeFirstName"], $_POST["changeLastName"], $_POST["changeBirthday"]);
+    $changeResult = changeToDB($_POST["pnr"], $_POST["changeFirstName"], $_POST["changeLastName"], $_POST["changeBirthday"], $_POST["changeCompany"], $_POST["changeDepartment"]);
     $msg = "Ändern erfolgreich!";
   }
   catch(Exception $e){
@@ -39,6 +39,7 @@ else {
 }
 //Alle Firmen für Iteration
 $companyList = getCompanies();
+
 ?>
 
 
@@ -71,6 +72,7 @@ $companyList = getCompanies();
   <script type="text/javascript" src="../js/jquery-3.3.1.js"></script>
   <script type="text/javascript" src="../js/jquery.tablesorter.min.js"></script>
   <script type="text/javascript" src="../js/searchfunctions.js"></script>
+  <script type="text/javascript" src="../js/sharefunctions.js"></script>
 
 
   <!-- Favicon
@@ -147,16 +149,46 @@ $companyList = getCompanies();
             //iterate over PDOStatement if connection to db is established
             if($resultset instanceof PDOStatement){
               foreach ($resultset as $row){ ?>
-              <tr id=<?php echo $row['PNr'];?>>
+              <tr class="item" id=<?php echo $row['PNr'];?>>
+                <!-- Vorname -->
                 <td><p id="fn-<?php echo $row['PNr'];?>"><?php echo $row['Firstname'];?></p><input type="text" id="edit-fn-<?php echo $row['PNr'];?>" value="<?php echo $row['Firstname'];?>"></td>
+                <!-- Nachname -->
                 <td><p id="ln-<?php echo $row['PNr'];?>"><?php echo $row['Lastname'];?></p><input type="text" id="edit-ln-<?php echo $row['PNr'];?>" value="<?php echo $row['Lastname'];?>"></td>
-                <td><p id="cn-<?php echo $row['PNr'];?>"><?php echo $row['CName'];?></p><input type="text" id="edit-cn-<?php echo $row['PNr'];?>" value=""></td><!-- Inputs noch füllen! -->
-                <td><p id="dn-<?php echo $row['PNr'];?>"><?php echo $row['DName'];?></p><input type="text" id="edit-dn-<?php echo $row['PNr'];?>" value=""></td>
+                <!-- Firma -->
+                <td><p id="cn-<?php echo $row['PNr'];?>"><?php echo $row['CName'];?></p>
+                <select id="edit-cn-<?php echo $row['PNr'];?>" onchange="departmentChange('edit-cn-<?php echo $row['PNr'];?>', '', 'depSelector-<?php echo $row['PNr'];?>', 'edit-dn-<?php echo $row['PNr'];?>', '<?php echo $row['PNr'];?>')" >
+                <?php 
+                $companyList = getCompanies();
+                $associatedCompany = findCompanyForPerson($row['PNr']);
+                foreach ($companyList as $company){ ?> ?>
+                  <option value="<?php echo $company['CName']; ?>"<?php if($associatedCompany == $company['CName']) echo " selected"; ?>><?php echo $company['CName']; ?></option>
+                <?php } ?>
+                </select></td>
+                <!-- Abteilung -->
+                <td><p id="dn-<?php echo $row['PNr'];?>"><?php echo $row['DName'];?></p>
+                <div id="depSelector-<?php echo $row['PNr'];?>">
+                  <?php 
+                  $currentDepartments = getDepartments($row['CName']); 
+                  $associatedDepartment = findDepartmentForPerson($row['PNr']);
+                  ?>
+                  <select id="edit-dn-<?php echo $row['PNr'];?>">
+                  <?php
+                  foreach($currentDepartments as $department) {
+                  ?>
+                    <option value="<?php echo $department['DName']; ?>"<?php if($associatedDepartment == $department['DName']) echo " selected"; ?>><?php echo $department['DName']; ?></option>
+                  <?php 
+                  }
+                  ?>
+                  </select>
+                </div></td>
+                <!-- Geburtstag -->
                 <td><p id="bd-<?php echo $row['PNr'];?>"><?php echo $row['Birthday'];?></p><input type="date" id="edit-bd-<?php echo $row['PNr'];?>" value="<?php echo $row['Birthday'];?>" max="<?php echo date('Y-m-d') ?>"></td>
+                <!-- Aktionen -->
                 <td><form action="" method="post">
                   <a class="del" onclick="deleteEntry(<?php echo $row['PNr'];?>)"><img class="icon-btn" src="../images/delete.png"></a>
                   <a class="edit" onclick="editEntryStart(<?php echo $row['PNr'];?>)"><img class="icon-btn" src="../images/edit.png"></a>
-                  <a class="save" onclick="editEntryEnd(<?php echo $row['PNr'];?>)" id="save-<?php echo $row['PNr'];?>" onclick="editEntryStart(<?php echo $row['PNr'];?>)"><img class="icon-btn" src="../images/save.png"></a>
+                  <a class="abort" id="abort-<?php echo $row['PNr'];?>" onclick="abortEdit(<?php echo $row['PNr'];?>)"><img class="icon-btn" src="../images/abort.png"></a>
+                  <a class="save" onclick="editEntryEnd(<?php echo $row['PNr'];?>)" id="save-<?php echo $row['PNr'];?>"><img class="icon-btn" src="../images/save.png"></a> 
                 </form></td>
               </tr>
         <?php }

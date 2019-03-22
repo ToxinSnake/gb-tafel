@@ -82,7 +82,7 @@ function delete($Pnr){
 
 }
 
-function changeToDB($pnr, $firstname, $lastname, $birthday){
+function changeToDB($pnr, $firstname, $lastname, $birthday, $company, $department){
 
   //Check firstname length
   validateFirstname($firstname);
@@ -93,31 +93,34 @@ function changeToDB($pnr, $firstname, $lastname, $birthday){
   //check if bday is in correct format and not in the future
   validateBirthday($birthday);
 
-  $date = $birthday;
+  //TODO: Validierung für Company und Department
 
   //Connect to DB
   $pdo = (new SQLiteConnection())->connect();
   if(!($pdo instanceof PDO)){
     throw new Exception("Verbindung zur DB gescheitert!");
-  }
+  } 
 
-  else{
-    $sql = 'UPDATE Person
-    SET Firstname = :firstname,
-    Lastname = :lastname,
-    Birthday = :birthday
-    WHERE PNr = :pnr';
+  $CoDeId = getCompanyDepartmentId($company, $department);
 
-    $statement = $pdo->prepare($sql);
-    $rtvalue = $statement->execute([ //TRUE on success, FALSE else
-      ':firstname' => $firstname,
-      ':lastname' => $lastname,
-      ':birthday' => $date,
-      ':pnr' => $pnr
-    ]);
+  $sql = 'UPDATE Person
+  SET Firstname = :firstname,
+  Lastname = :lastname,
+  Birthday = :birthday,
+  Company_Department_Id = :codeid
+  WHERE PNr = :pnr';
 
-    return $rtvalue;
-  }
+  $statement = $pdo->prepare($sql);
+  $rtvalue = $statement->execute([ //TRUE on success, FALSE else
+    ':firstname' => $firstname,
+    ':lastname' => $lastname,
+    ':birthday' => $birthday,
+    ':codeid' => $CoDeId,
+    ':pnr' => $pnr
+  ]);
+
+  return $rtvalue;
+  
 }
 
 ?>

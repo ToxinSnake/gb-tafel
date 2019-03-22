@@ -1,16 +1,3 @@
-function departmentChange(){                               
-  // Sobald eine Firma ausgewählt wird               
-  var optionValue = jQuery("select[name='company']").val();                                             
-  jQuery.ajax({
-    type: "GET",
-    url: "../app/cmp_ajaxlist.php",
-    data: "company="+optionValue,
-    success: function(response){
-      jQuery("#depSelector").html(response);
-    }
-  });
-} 
-
 function deleteEntry(pnr){
   if(confirm("Wirklich löschen?")){
     $.ajax({
@@ -35,8 +22,9 @@ function validateName(name){
 
 function editEntryStart(pnr){
 
-  var textIds = ["fn-"+pnr, "ln-"+pnr, "cn-"+pnr, "dn-"+pnr, "bd-"+pnr];
-  var inputIds = ["edit-fn-"+pnr, "edit-ln-"+pnr, "edit-cn-"+pnr, "edit-dn-"+pnr, "edit-bd-"+pnr];
+  var textIds = ["fn-"+pnr, "ln-"+pnr, "bd-"+pnr, "cn-"+pnr, "dn-"+pnr];
+  var inputIds = ["edit-fn-"+pnr, "edit-ln-"+pnr, "edit-bd-"+pnr, "edit-cn-"+pnr, "edit-dn-"+pnr];
+  var TEXTFIELDINDEX = 2;
     
    //Text ausblenden
    for(i = 0; i < textIds.length; i++){
@@ -55,10 +43,15 @@ function editEntryStart(pnr){
   for(i = 0; i < inputIds.length; i++){
     document.getElementById(inputIds[i]).style.display = "block";
   }
-
-  //Save Button einblenden
+  //html von textIds füllen (nicht Firmen und Abteilungswahl)
+  for(i = 0; i <= TEXTFIELDINDEX; i++){
+    document.getElementById(inputIds[i]).value = document.getElementById(textIds[i]).innerHTML;
+  }
+  //Save- und Abort Button einblenden
   document.getElementById("save-"+pnr).style.display = "inline";
   document.getElementById("save-"+pnr).style.visibility = "visible";
+  document.getElementById("abort-"+pnr).style.display = "inline";
+  document.getElementById("abort-"+pnr).style.visibility = "visible";
 }
 
 function editEntryEnd(pnr){
@@ -67,6 +60,9 @@ function editEntryEnd(pnr){
   var inputIds = ["edit-fn-"+pnr, "edit-ln-"+pnr, "edit-cn-"+pnr, "edit-dn-"+pnr, "edit-bd-"+pnr];
   var firstName = document.getElementById(inputIds[0]).value;
   var lastName = document.getElementById(inputIds[1]).value;
+  var company = document.getElementById(inputIds[2]).value;
+  var department = document.getElementById(inputIds[3]).value;
+  var birthday = document.getElementById(inputIds[4]).value;
 
   //Validierung
   if(validateName(firstName) == false){
@@ -78,6 +74,8 @@ function editEntryEnd(pnr){
     return;
   }
 
+  //TODO: rest validieren
+
   //ajax änderung durchführen
   $.ajax({
     type: "POST",
@@ -85,7 +83,9 @@ function editEntryEnd(pnr){
     data: { pnr: pnr,
             changeFirstName: firstName,
             changeLastName: lastName,
-            changeBirthday: document.getElementById(inputIds[4]).value},
+            changeCompany: company,
+            changeDepartment: department,
+            changeBirthday: birthday},
     success: function(){
       //Inputs auf Texte übertragen
       for(i = 0; i < textIds.length; i++){
@@ -107,8 +107,9 @@ function editEntryEnd(pnr){
       document.getElementById(textIds[i]).style.display = "block";
     }
 
-    //Save Button ausblenden
+    //Save- und Abbrechen Button ausblenden
     document.getElementById("save-"+pnr).style.display = "none";
+    document.getElementById("abort-"+pnr).style.display = "none";
 
     //Delete und Edit wieder einblenden
     var nodesdel = document.getElementsByClassName("del");
@@ -117,4 +118,31 @@ function editEntryEnd(pnr){
       nodesdel[i].style.display = "inline";
       nodesedit[i].style.display = "inline";
     } 
+  }
+
+  function abortEdit(pnr){
+    var textIds = ["fn-"+pnr, "ln-"+pnr, "cn-"+pnr, "dn-"+pnr, "bd-"+pnr];
+    var inputIds = ["edit-fn-"+pnr, "edit-ln-"+pnr, "edit-cn-"+pnr, "edit-dn-"+pnr, "edit-bd-"+pnr];
+
+    //Inputs ausblenden
+    for(i = 0; i < inputIds.length; i++){
+      document.getElementById(inputIds[i]).style.display = "none";
+    }
+
+    //Texte wieder einblenden
+    for(i = 0; i < textIds.length; i++){
+      document.getElementById(textIds[i]).style.display = "block";
+    }
+
+    //Save- und Abbrechen Button ausblenden
+    document.getElementById("save-"+pnr).style.display = "none";
+    document.getElementById("abort-"+pnr).style.display = "none";
+
+    //Delete und Edit wieder einblenden
+    var nodesdel = document.getElementsByClassName("del");
+    var nodesedit = document.getElementsByClassName("edit");
+    for (i = 0; i < nodesdel.length; i++) {
+      nodesdel[i].style.display = "inline";
+      nodesedit[i].style.display = "inline";
+    }
   }
