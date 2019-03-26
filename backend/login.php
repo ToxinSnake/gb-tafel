@@ -1,9 +1,28 @@
 <!DOCTYPE html>
+
 <!--
 * Made by Arne Otten
 * www.mj-12.net
-* 10/07/2018
+* 22/03/2019
 -->
+
+<?php
+require_once "../app/auth.php";
+
+$pdo = (new SQLiteConnection())->connect();
+if(!($pdo instanceof PDO)){
+  throw new Exception("Verbindung zu DB fehlgeschlagen!");
+}
+
+if(!empty($_POST["username"]) && !empty($_POST["password"])){
+  if(validateLogin($_POST["username"], $_POST["password"])){
+    session_start();
+    $_SESSION["privilige"] = "admin";
+  } 
+}
+
+
+?>
 
 <html lang="en">
 <head>
@@ -11,7 +30,7 @@
   <!-- Basic Page Needs
   –––––––––––––––––––––––––––––––––––––––––––––––––– -->
   <meta charset="utf-8">
-  <title>Geburtstage bearbeiten</title>
+  <title>Anmelden</title>
   <meta name="description" content="">
   <meta name="author" content="Arne Otten">
 
@@ -35,18 +54,22 @@
 
 </head>
 <body>
+
   <!-- Primary Page Layout
   –––––––––––––––––––––––––––––––––––––––––––––––––– -->
   <div class="container">
     <div class="row">
-      <div class="twelve columns" id="menu">
-        <h3>Geburtstage bearbeiten</h3>
-        <a class="button button-primary" href="new.php">Neu</a>
-        <a class="button button-primary" href="search.php">Suchen</a>
-        <a class="button button" href="menu.html" style="margin-top: 3em;">Zurück</a>
+      <div class="twelve column" id="menu">
+        <h3>Anmelden</h3>
+        <form method="POST" action="login.php">
+          <input type="text" placeholder="Benutzername" name="username">
+          <input type="password" placeholder="Passwort" name="password">
+          <input class="button-primary" type="submit" value="Log In" style="display: block;">
+        </form>
+      </div>
     </div>
   </div>
-</div>
+
 <!-- End Document
   –––––––––––––––––––––––––––––––––––––––––––––––––– -->
 </body>

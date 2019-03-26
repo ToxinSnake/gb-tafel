@@ -41,7 +41,16 @@ class SQLiteConnection{
       CREATE TABLE Company_Department (
       CoDeId INTEGER PRIMARY KEY,
       CId INTEGER,
-      DId INTEGER
+      DId INTEGER);
+      
+      CREATE TABLE User (
+      UNr INTEGER PRIMARY KEY,
+      Username TEXT NOT NULL,
+      Password TEXT NOT NULL,
+      Privilege TEXT NOT NULL);
+      
+      INSERT INTO User (Username, Password, Privilege) VALUES (
+        "admin", "admin", "admin"
       );';
     $pdo;
 
