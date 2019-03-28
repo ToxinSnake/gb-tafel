@@ -1,29 +1,38 @@
-<!DOCTYPE html>
+<?php
+session_start();
+require_once "../app/auth.php";
 
+if(isset($_SESSION["username"])){
+  header("Location: menu.html"); 
+  exit;
+}
+
+if(isset($_SESSION["referer"])){
+  $msg = "Bitte loggen Sie sich ein!";
+}
+
+if(!empty($_POST["username"]) && !empty($_POST["password"])){
+  if(validateLogin($_POST["username"], $_POST["password"])){    
+    $_SESSION["username"] = $_POST["username"];
+    setPrivilege($_POST["username"]);
+    if(isset($_SESSION["referer"])){
+      header("Location: ".$_SESSION["referer"]); 
+      exit;
+    } else {
+      header("Location: index.php"); 
+      exit;
+    }
+  } else {
+    $msg = "Benutzername oder Passwort ungültig!";
+  }
+}
+?>
+<!DOCTYPE html>
 <!--
 * Made by Arne Otten
 * www.mj-12.net
 * 22/03/2019
 -->
-
-<?php
-require_once "../app/auth.php";
-
-$pdo = (new SQLiteConnection())->connect();
-if(!($pdo instanceof PDO)){
-  throw new Exception("Verbindung zu DB fehlgeschlagen!");
-}
-
-if(!empty($_POST["username"]) && !empty($_POST["password"])){
-  if(validateLogin($_POST["username"], $_POST["password"])){
-    session_start();
-    $_SESSION["privilige"] = "admin";
-  } 
-}
-
-
-?>
-
 <html lang="en">
 <head>
 
@@ -58,9 +67,11 @@ if(!empty($_POST["username"]) && !empty($_POST["password"])){
   <!-- Primary Page Layout
   –––––––––––––––––––––––––––––––––––––––––––––––––– -->
   <div class="container">
+
     <div class="row">
-      <div class="twelve column" id="menu">
+      <div class="twelve columns" id="menu">
         <h3>Anmelden</h3>
+        <?php if(!empty($msg)){ ?> <p class="response"> <?php echo $msg; ?> </p> <?php } ?>
         <form method="POST" action="login.php">
           <input type="text" placeholder="Benutzername" name="username">
           <input type="password" placeholder="Passwort" name="password">

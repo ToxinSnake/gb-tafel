@@ -165,7 +165,7 @@ if(!empty($_POST["companyInput"])){
       </div>
 
       <div class="twelve columns">
-        <a class="button button" href="menu.html">Zurück</a>
+        <a class="button button" href="index.php">Zurück</a>
       </div>
 
     </div>

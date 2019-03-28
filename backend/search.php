@@ -1,11 +1,11 @@
-<!DOCTYPE html>
-
-<!--
-* Made by Arne Otten
-* www.mj-12.net
-* 08/07/2018
--->
 <?php
+session_start();
+if(!isset($_SESSION["username"])){
+  $_SESSION["referer"] = $_SERVER["PHP_SELF"];
+  header("Location: login.php"); 
+  exit;
+}
+
 require_once "../app/search_methods.php";
 
 //delete
@@ -39,8 +39,14 @@ else {
 }
 //Alle Firmen für Iteration
 $companyList = getCompanies();
-
 ?>
+<!DOCTYPE html>
+<!--
+* Made by Arne Otten
+* www.mj-12.net
+* 08/07/2018
+-->
+
 
 
 <html lang="en">
@@ -120,7 +126,7 @@ $companyList = getCompanies();
       </form>
       <div class="twelve columns" style="text-align: center">
         <a class="button button" href="new.php">Neuer Geburtstag</a>
-        <a class="button button" href="menu.html">Zurück</a>
+        <a class="button button" href="index.php">Zurück</a>
       </div>
       <br>
     </div>

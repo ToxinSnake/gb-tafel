@@ -1,32 +1,19 @@
-<!DOCTYPE html>
+<?php
+session_start();
+if(!isset($_SESSION["username"])){
+  $_SESSION["referer"] = $_SERVER["PHP_SELF"];
+  header("Location: login.php"); 
+  exit;
+}
+?>
 
+<!DOCTYPE html>
 <!--
 * Made by Arne Otten
 * www.mj-12.net
-* 08/07/2018
+* 09/07/2018
 -->
 
-<?php
-include "../app/new_methods.php";
-
-$msg = NULL;
-
-if(!empty($_POST["firstNameInput"]) && !empty($_POST["lastNameInput"]) && !empty($_POST["birthdayInput"])){
-  try{
-    $result = addToDB($_POST["firstNameInput"], $_POST["lastNameInput"], $_POST["birthdayInput"]);
-  }
-  catch(Exception $e){
-    $msg = $e->getMessage();
-  }
-
-  if($result == true){ 
-    $msg = "Hinzufügen erfolgreich!";
-  }
-}
-
-//Alle Firmen für Iteration
-$companyList = getCompanies();
-?>
 
 <html lang="en">
 <head>
@@ -34,7 +21,7 @@ $companyList = getCompanies();
   <!-- Basic Page Needs
   –––––––––––––––––––––––––––––––––––––––––––––––––– -->
   <meta charset="utf-8">
-  <title>Geburtstag hinzufügen</title>
+  <title>Hauptmenü</title>
   <meta name="description" content="">
   <meta name="author" content="Arne Otten">
 
@@ -52,11 +39,6 @@ $companyList = getCompanies();
   <link rel="stylesheet" href="../css/skeleton.css">
   <link rel="stylesheet" href="../css/menustyle.css">
 
-  <!-- JS
-  –––––––––––––––––––––––––––––––––––––––––––––––––– -->
-  <script type="text/javascript" src="../js/jquery-3.3.1.js"></script>
-  <script type="text/javascript" src="../js/newfunctions.js"></script>
-
   <!-- Favicon
   –––––––––––––––––––––––––––––––––––––––––––––––––– -->
   <link rel="icon" type="image/png" href="../images/favicon.png">
@@ -69,34 +51,17 @@ $companyList = getCompanies();
   <div class="container">
     <div class="row">
       <div class="twelve columns" id="menu">
-        <h3>Geburtstag hinzufügen</h3>
-      <?php if(!empty($msg)){ ?> <p> <?php echo $msg; ?> </p> <?php } ?>
-        <form action="" method="post">
-          <input type="text" name="firstNameInput" placeholder="Vorname"  maxlength="40" autofocus required>
-          <input type="text" name="lastNameInput" placeholder="Nachname"  maxlength="40" required>
-          <input name="birthdayInput" placeholder="Geburtstag (YYYY-mm-dd)" type="text" required>
-          <select name="company">
-          <?php foreach ($companyList as $company){ ?> ?>
-            <option value="<?php echo $company['CName']; ?>"><?php echo $company['CName']; ?></option>
-          <?php } ?>
-          </select>
-          <div id="depSelector">
-            <select name="department">
-              <option value=""></option>
-            </select>
-          </div>
-          <input class="button-primary" value="Hinzufügen" type="submit">
-        </form>
-        <a class="button button" href="edit.html">Zurück</a>
+        <h3>Hauptmenü</h3>
+        <a class="button button-primary" href="search.php">Geburtstage bearbeiten</a>
+        <a class="button button-primary" href="companies.php">Firmen/Abteilungen verwalten</a>
+        <a class="button button-primary disabled" href="#">Tafel ändern</a>
+        <a class="button button-primary" href="../gbtafel.php">Tafel anzeigen</a>
+        <a class="button button" href="settings.php">Einstellungen</a>
+        <a class="button button" href="#" style="margin-top: 3em;">Logout</a>
     </div>
   </div>
 </div>
 <!-- End Document
   –––––––––––––––––––––––––––––––––––––––––––––––––– -->
-<script>
-  $(document).ready(function() {
-    departmentChange();
-  });
-</script>
 </body>
 </html>

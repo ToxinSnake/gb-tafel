@@ -23,5 +23,17 @@ function validateLogin($username, $password){
     }
 }
 
+function setPrivilege($username){
+    $pdo = (new SQLiteConnection())->connect();
+    if(!($pdo instanceof PDO)){
+      throw new Exception("Verbindung zu DB fehlgeschlagen!");
+    }
 
+    $sql = "SELECT Privilege FROM User WHERE Username IS :username;";
+    $statement = $pdo->prepare($sql);
+    $statement->execute([':username' => $username]);
+    $privilege = $statement->fetch()['Privilege'];
+
+    $_SESSION["privilege"] = $privilege;
+}
 ?>

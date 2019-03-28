@@ -61,7 +61,7 @@ if(isset($_GET["createdb"])){
         <p><?php echo $result;?></p><br>
         <a class="button button-primary" href="?testcon">DB-Verbindung testen</a>
         <a class="button button-primary" href="?createdb">DB neu anlegen</a>
-        <a class="button button" href="menu.html" style="margin-top: 3em;">Zurück</a>
+        <a class="button button" href="index.php" style="margin-top: 3em;">Zurück</a>
     </div>
   </div>
 </div>
