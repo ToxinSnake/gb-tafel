@@ -1,3 +1,29 @@
+function departmentChangeSearch(selectId, depSelectName, divSelectId){
+  // Sobald eine Firma ausgewählt wird               
+  var optionValue = jQuery("select[name="+selectId+"]").val();                                             
+  jQuery.ajax({
+    type: "GET",
+    url: "../app/cmp_ajaxlist.php",
+    data: "company="+optionValue+"&depSelectName="+depSelectName+"&mode=search",
+    success: function(response){
+      jQuery("#"+divSelectId).html(response);
+    }
+  });
+}
+
+function departmentChangeEdit(selectId, divSelectId, depSelectId, PNr){
+  // Sobald eine Firma ausgewählt wird               
+  var optionValue = jQuery("select[id="+selectId+"]").val();                                             
+  jQuery.ajax({
+    type: "GET",
+    url: "../app/cmp_ajaxlist.php",
+    data: "company="+optionValue+"&depSelectId="+depSelectId+"&PNr="+PNr+"&mode=edit",
+    success: function(response){
+      jQuery("#"+divSelectId).html(response);
+    }
+  });
+} 
+
 function deleteEntry(pnr){
   if(confirm("Wirklich löschen?")){
     $.ajax({

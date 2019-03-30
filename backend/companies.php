@@ -93,7 +93,6 @@ if(!empty($_POST["companyInput"])){
   –––––––––––––––––––––––––––––––––––––––––––––––––– -->
   <script type="text/javascript" src="../js/jquery-3.3.1.js"></script>
   <script type="text/javascript" src="../js/companiesfunctions.js"></script>
-  <script type="text/javascript" src="../js/sharefunctions.js"></script>
 
   <!-- Favicon
   –––––––––––––––––––––––––––––––––––––––––––––––––– -->
@@ -126,7 +125,7 @@ if(!empty($_POST["companyInput"])){
         </form>
 
         <form action="" method="post" onsubmit="return confirmDeleteDepartment('departmentList')">
-          <select name="delDepCompany" onchange="departmentChange('delDepCompany', 'delDepartment', 'depSelector')">
+          <select name="delDepCompany" onchange="departmentChangeNew('delDepCompany', 'delDepartment', 'depSelector')">
             <?php 
             $companyList = getCompanies();
             foreach ($companyList as $company){ ?>
@@ -174,7 +173,7 @@ if(!empty($_POST["companyInput"])){
   –––––––––––––––––––––––––––––––––––––––––––––––––– -->
 <script>
 $(document).ready(function() {
-  departmentChange('delDepCompany', 'delDepartment', 'depSelector');
+  departmentChangeNew('delDepCompany', 'delDepartment', 'depSelector');
 });
 </script>
 </body>

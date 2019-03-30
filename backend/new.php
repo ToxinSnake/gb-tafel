@@ -74,7 +74,7 @@ $companyList = getCompanies();
           <input type="text" name="firstNameInput" value="<?php echo isset($_POST["firstNameInput"]) ? htmlspecialchars($_POST['firstNameInput']) : ''  ?>" placeholder="Vorname"  maxlength="40" autofocus required>
           <input type="text" name="lastNameInput" value="<?php echo isset($_POST["lastNameInput"]) ? htmlspecialchars($_POST['lastNameInput']) : '' ?>" placeholder="Nachname"  maxlength="40" required>
           <input type="date" name="birthdayInput" value="<?php echo isset($_POST["birthdayInput"]) ? htmlspecialchars($_POST['birthdayInput']) : '' ?>" placeholder="Geburtstag (YYYY-mm-dd)" maxlength="10" max="<?php echo date('Y-m-d') ?>" required>
-          <select name="company" onchange="departmentChange('company', 'department', 'depSelector')" >
+          <select name="company" onchange="departmentChangeNew('company', 'department', 'depSelector')" >
           <?php foreach ($companyList as $company){ ?> ?>
             <option value="<?php echo $company['CName']; ?>"><?php echo $company['CName']; ?></option>
           <?php } ?>
@@ -94,7 +94,7 @@ $companyList = getCompanies();
   –––––––––––––––––––––––––––––––––––––––––––––––––– -->
 <script>
   $(document).ready(function() {
-    departmentChange('company', 'department', 'depSelector');
+    departmentChangeNew('company', 'department', 'depSelector');
   });
 </script>
 </body>

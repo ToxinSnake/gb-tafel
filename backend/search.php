@@ -78,8 +78,6 @@ $companyList = getCompanies();
   <script type="text/javascript" src="../js/jquery-3.3.1.js"></script>
   <script type="text/javascript" src="../js/jquery.tablesorter.min.js"></script>
   <script type="text/javascript" src="../js/searchfunctions.js"></script>
-  <script type="text/javascript" src="../js/sharefunctions.js"></script>
-
 
   <!-- Favicon
   –––––––––––––––––––––––––––––––––––––––––––––––––– -->
@@ -104,7 +102,7 @@ $companyList = getCompanies();
           <input name="birthdayInput" placeholder="" type="date">
         </div>
         <div class="four columns" style="margin-left: 0">
-          <select name="company" onchange="departmentChange('company','departmentList','depSelector','departmentList','','1')">
+          <select name="company" onchange="departmentChangeSearch('company','departmentList','depSelector')">
             <option value="">Firma wählen...</option>
             <?php foreach ($companyList as $company){ ?> ?>
               <option value="<?php echo $company['CName']; ?>"><?php echo $company['CName']; ?></option>
@@ -162,7 +160,7 @@ $companyList = getCompanies();
                 <td><p id="ln-<?php echo $row['PNr'];?>"><?php echo $row['Lastname'];?></p><input type="text" id="edit-ln-<?php echo $row['PNr'];?>" value="<?php echo $row['Lastname'];?>"></td>
                 <!-- Firma -->
                 <td><p id="cn-<?php echo $row['PNr'];?>"><?php echo $row['CName'];?></p>
-                <select id="edit-cn-<?php echo $row['PNr'];?>" onchange="departmentChange('edit-cn-<?php echo $row['PNr'];?>', '', 'depSelector-<?php echo $row['PNr'];?>', 'edit-dn-<?php echo $row['PNr'];?>', '<?php echo $row['PNr'];?>')" >
+                <select id="edit-cn-<?php echo $row['PNr'];?>" onchange="departmentChangeEdit('edit-cn-<?php echo $row['PNr'];?>', 'depSelector-<?php echo $row['PNr'];?>', 'edit-dn-<?php echo $row['PNr'];?>', '<?php echo $row['PNr'];?>')" >
                 <?php 
                 $companyList = getCompanies();
                 $associatedCompany = findCompanyForPerson($row['PNr']);

@@ -4,37 +4,45 @@
 //Falls die Firma keine Abteilung besitzt, wird ein leeres Select Feld zurückgegeben
 require_once "shared_methods.php";
 
-$company = $_GET["company"];
-$depSelectName = $_GET["depSelectName"];
-$depSelectId = $_GET["depSelectId"];
-if(!empty($_GET["PNr"])) $Pnr = $_GET["PNr"];
-$associatedDepartment = "";
-
-//Benötigt, damit der selected Attribut gesetzt werden kann in der Suchtabelle
-if(isset($Pnr)){
-    $associatedDepartment = findDepartmentForPerson($Pnr);
+//Wenn von Geburtstag anlegen und Firmen verwalten aufgerufen wird
+if($_GET["mode"] == "new"){
+    $currentDepartments = getDepartments($_GET["company"]);
+    ?>
+<select name="<?php echo $_GET["depSelectName"] ?>">
+    <?php 
+    foreach($currentDepartments as $department) { ?>
+    <option value="<?php echo $department['DName']; ?>"><?php echo $department['DName']; ?></option>
+    <?php 
+    }
+    ?>
+</select>
+<?php 
 }
 
-//Wenn Firma auch Abteilungen hat, ansonsten Leeres Select
-if(!(empty($company)) && getDepartmentsRowCount($company) != 0){
+//Wenn von der Suche aus aufgerufen wird
+elseif($_GET["mode"] == "search"){
     $currentDepartments = getDepartments($_GET["company"]);
-    
-?> 
-<select name="<?php echo $depSelectName ?>" id="<?php echo $depSelectId ?>">
-<?php
-    if(isset($_GET["search"]) && ($_GET["search"] === 1)) { ?> <option value="%">Alle</option>  <?php } 
-    foreach($currentDepartments as $department) {
-?>
-    <option value="<?php echo $department['DName']; ?>"<?php if($associatedDepartment == $department['DName']) echo " selected"; ?>><?php echo $department['DName']; ?></option>
-<?php 
-    }
+    ?>
+<select name="<?php echo $_GET["depSelectName"] ?>">
+    <option value="%">Alle</option>
+    <?php 
+    foreach($currentDepartments as $department) { ?>
+    <option value="<?php echo $department['DName']; ?>"><?php echo $department['DName']; ?></option>
+    <?php 
+    } 
+}
+
+//Wenn ein Eintrag editiert wird
+elseif($_GET["mode"] == "edit"){
+    $currentDepartments = getDepartments($_GET["company"]);
+    $associatedDepartment = findDepartmentForPerson($_GET["PNr"]);
+    ?>
+<select id="<?php echo $_GET["depSelectId"] ?>" style="display: block;">
+    <?php 
+    foreach($currentDepartments as $department) { ?>
+    <option value="<?php echo $department['DName']; ?>" <?php if($associatedDepartment == $department['DName']) echo " selected"; ?>><?php echo $department['DName']; ?></option>
+    <?php 
+    } 
+}
 ?>
 </select>
-<?php
-} else {
-?>
-<select name="<?php echo $depSelectName ?>" id="<?php echo $depSelectId ?>" disabled>
-    <option value=""></option>
-</select>
-<?php 
-} ?>
