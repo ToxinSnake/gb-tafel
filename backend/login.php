@@ -3,7 +3,7 @@ session_start();
 require_once "../app/auth.php";
 
 if(isset($_SESSION["username"])){
-  header("Location: menu.html"); 
+  header("Location: index.php"); 
   exit;
 }
 

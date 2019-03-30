@@ -5,6 +5,22 @@ if(!isset($_SESSION["username"])){
   header("Location: login.php"); 
   exit;
 }
+
+//Logout
+if(isset($_GET["logout"])){
+  
+  //Cookie Parameter holen, Lebenszeit auf Vergangenheit setzen, damit Cookie gelöscht wird.
+  $params = session_get_cookie_params();
+  setcookie(session_name(), '', time() - 42000,
+    $params["path"], $params["domain"],
+    $params["secure"], $params["httponly"]
+  );
+  session_destroy();
+
+  header("Location: login.php"); 
+  exit;
+}
+
 ?>
 
 <!DOCTYPE html>
@@ -57,7 +73,7 @@ if(!isset($_SESSION["username"])){
         <a class="button button-primary disabled" href="#">Tafel ändern</a>
         <a class="button button-primary" href="../gbtafel.php">Tafel anzeigen</a>
         <a class="button button" href="settings.php">Einstellungen</a>
-        <a class="button button" href="#" style="margin-top: 3em;">Logout</a>
+        <a class="button button" href="index.php?logout=1" style="margin-top: 3em;">Logout</a>
     </div>
   </div>
 </div>

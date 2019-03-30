@@ -104,7 +104,7 @@ $companyList = getCompanies();
           <input name="birthdayInput" placeholder="" type="date">
         </div>
         <div class="four columns" style="margin-left: 0">
-          <select name="company" onchange="departmentChange()">
+          <select name="company" onchange="departmentChange('company','departmentList','depSelector','departmentList','','1')">
             <option value="">Firma wählen...</option>
             <?php foreach ($companyList as $company){ ?> ?>
               <option value="<?php echo $company['CName']; ?>"><?php echo $company['CName']; ?></option>

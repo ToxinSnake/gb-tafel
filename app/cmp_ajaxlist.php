@@ -22,6 +22,7 @@ if(!(empty($company)) && getDepartmentsRowCount($company) != 0){
 ?> 
 <select name="<?php echo $depSelectName ?>" id="<?php echo $depSelectId ?>">
 <?php
+    if(isset($_GET["search"]) && ($_GET["search"] === 1)) { ?> <option value="%">Alle</option>  <?php } 
     foreach($currentDepartments as $department) {
 ?>
     <option value="<?php echo $department['DName']; ?>"<?php if($associatedDepartment == $department['DName']) echo " selected"; ?>><?php echo $department['DName']; ?></option>
