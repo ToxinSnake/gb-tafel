@@ -7,20 +7,22 @@ function validateLogin($username, $password){
       throw new Exception("Verbindung zu DB fehlgeschlagen!");
     }
 
-    //Passwort hashen
-
-    $sql = "SELECT Username FROM User WHERE Username IS :username AND Password IS :passwd;";
+    $sql = "SELECT Password FROM User WHERE Username IS :username";
     $statement = $pdo->prepare($sql);
-    $statement->execute([':username' => $username, 
-        ':passwd' => $password]);
+    $statement->execute([':username' => $username]);
     $rtValue = $statement->fetchAll();
     
+    //Benutzer existiert nicht
+    if(count($rtValue) == 0){
+        return false;
+    } 
 
-    if(count($rtValue) > 0){
+    if(password_verify($password, $rtValue[0]["Password"])){
         return true;
     } else {
         return false;
     }
+
 }
 
 function setPrivilege($username){

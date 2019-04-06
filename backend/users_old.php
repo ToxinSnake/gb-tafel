@@ -1,43 +1,17 @@
-<?php
-session_start();
-if(!isset($_SESSION["username"])){
-  $_SESSION["referer"] = $_SERVER["PHP_SELF"];
-  header("Location: login.php"); 
-  exit;
-}
-
-//Logout
-if(isset($_GET["logout"])){
-  
-  //Cookie Parameter holen, Lebenszeit auf Vergangenheit setzen, damit Cookie vom Browser gelöscht wird.
-  $params = session_get_cookie_params();
-  setcookie(session_name(), '', time() - 42000,
-    $params["path"], $params["domain"],
-    $params["secure"], $params["httponly"]
-  );
-  session_destroy();
-
-  header("Location: login.php"); 
-  exit;
-}
-
-?>
-
 <!DOCTYPE html>
+
 <!--
 * Made by Arne Otten
 * www.mj-12.net
-* 09/07/2018
+* 08/07/2018
 -->
-
-
 <html lang="en">
 <head>
 
   <!-- Basic Page Needs
   –––––––––––––––––––––––––––––––––––––––––––––––––– -->
   <meta charset="utf-8">
-  <title>Hauptmenü</title>
+  <title>Benutzer verwalten</title>
   <meta name="description" content="">
   <meta name="author" content="Arne Otten">
 
@@ -55,6 +29,10 @@ if(isset($_GET["logout"])){
   <link rel="stylesheet" href="../css/skeleton.css">
   <link rel="stylesheet" href="../css/menustyle.css">
 
+  <!-- JS
+  –––––––––––––––––––––––––––––––––––––––––––––––––– -->
+  <script type="text/javascript" src="../js/jquery-3.3.1.js"></script>
+
   <!-- Favicon
   –––––––––––––––––––––––––––––––––––––––––––––––––– -->
   <link rel="icon" type="image/png" href="../images/favicon.png">
@@ -67,17 +45,29 @@ if(isset($_GET["logout"])){
   <div class="container">
     <div class="row">
       <div class="twelve columns" id="menu">
-        <h3>Hauptmenü</h3>
-        <a class="button button-primary" href="search.php">Geburtstage bearbeiten</a>
-        <a class="button button-primary" href="companies.php">Firmen/Abteilungen verwalten</a>
-        <a class="button button-primary disabled" href="#">Tafel ändern</a>
-        <a class="button button-primary" href="../gbtafel.php">Tafel anzeigen</a>
-        <?php if($_SESSION["privilege"] == "admin") {?>
-        <a class="button button" href="users.php" style="margin-top: 3em;">Benutzer verwalten</a>
-        <a class="button button" href="settings.php" >Einstellungen</a>
-        <?php } ?>
-        <a class="button button" href="index.php?logout=1" style="margin-top: 3em;">Logout</a>
-        <p>Eingeloggt als: <?php echo $_SESSION["username"] ?></p>
+        <h3>Benutzer verwalten</h3>
+
+        <!-- Neuen Benutzer anlegen -->
+        <form action="" method="post">
+          <input type="text" name="username" value="" placeholder="Benutzername"  maxlength="40" autofocus required>
+          <input type="text" name="password" value="" placeholder="Passwort"  maxlength="60" required>
+          <select name="privilege" required>
+            <option value="">Privilegien wählen...</option>  
+            <option value="admin">admin</option>
+            <option value="user">user</option>
+          </select>
+          <input class="button-primary" value="Benutzer hinzufügen" type="submit">
+        </form>
+        <br>
+        
+        <!-- Benutzer löschen -->
+        <form action="" method="post">
+          <select name="deleteUser" required>
+            <option value="">Benutzer löschen...</option>
+          </select>
+          <input class="button-primary delete" value="Benutzer löschen" type="submit">
+        </form>
+        <a class="button button" href="index.php">Zurück</a>
     </div>
   </div>
 </div>

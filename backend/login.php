@@ -11,7 +11,7 @@ if(isset($_SESSION["referer"])){
   $msg = "Bitte loggen Sie sich ein!";
 }
 
-if(!empty($_POST["username"]) && !empty($_POST["password"])){
+if(isset($_POST["username"]) && isset($_POST["password"])){
   if(validateLogin($_POST["username"], $_POST["password"])){    
     $_SESSION["username"] = $_POST["username"];
     setPrivilege($_POST["username"]);

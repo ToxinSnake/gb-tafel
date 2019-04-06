@@ -21,6 +21,7 @@ class SQLiteConnection{
   public function create(){
     $configs = include('config.php');
     $path = "../".$configs['PATH_TO_SQLITE_FILE'];
+    $defaultPass = password_hash("admin", PASSWORD_BCRYPT);
     $sqlInit = 
      'CREATE TABLE Person (
       PNr INTEGER PRIMARY KEY,
@@ -50,8 +51,9 @@ class SQLiteConnection{
       Privilege TEXT NOT NULL);
       
       INSERT INTO User (Username, Password, Privilege) VALUES (
-        "admin", "admin", "admin"
+        "admin","'.$defaultPass.'", "admin"
       );';
+    echo $sqlInit;
     $pdo;
 
     if(file_exists($path)){
