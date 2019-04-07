@@ -9,11 +9,11 @@ if(!isset($_SESSION["username"])){
 require_once "../app/search_methods.php";
 
 //delete
-if(!empty($_POST["del"])){
+if(isset($_POST["del"])){
   $resultset = delete($_POST["del"]);
 }
 //edit
-if(!empty($_POST["pnr"]) && !empty($_POST["changeFirstName"]) && !empty($_POST["changeLastName"]) && !empty($_POST["changeBirthday"]) && !empty($_POST["changeCompany"]) && !empty($_POST["changeDepartment"])){
+if(isset($_POST["pnr"]) && isset($_POST["changeFirstName"]) && isset($_POST["changeLastName"]) && isset($_POST["changeBirthday"]) && isset($_POST["changeCompany"]) && isset($_POST["changeDepartment"])){
   try{
     $changeResult = changeToDB($_POST["pnr"], $_POST["changeFirstName"], $_POST["changeLastName"], $_POST["changeBirthday"], $_POST["changeCompany"], $_POST["changeDepartment"]);
     $msg = "Ändern erfolgreich!";
@@ -93,19 +93,19 @@ $companyList = getCompanies();
       <h3>Geburtstage verwalten</h3>       
       <form action="" method="get">
         <div class="four columns" >
-          <input name="firstNameInput" placeholder="Vorname" type="text" autofocus>
+          <input name="firstNameInput" placeholder="Vorname" type="text" value="<?php echo (isset($_GET["firstNameInput"])) ? $_GET["firstNameInput"] : ""; ?>" autofocus>
         </div>
         <div class="four columns" > 
-          <input name="lastNameInput" placeholder="Nachname" type="text">
+          <input name="lastNameInput" placeholder="Nachname" type="text" value="<?php echo (isset($_GET["lastNameInput"])) ? $_GET["lastNameInput"] : ""; ?>">
         </div> 
         <div class="four columns" >
-          <input name="birthdayInput" placeholder="" type="date">
+          <input name="birthdayInput" placeholder="" type="date" value="<?php echo (isset($_GET["birthdayInput"])) ? $_GET["birthdayInput"] : ""; ?>">
         </div>
         <div class="four columns" style="margin-left: 0">
           <select name="company" onchange="departmentChangeSearch('company','departmentList','depSelector')">
             <option value="">Firma wählen...</option>
             <?php foreach ($companyList as $company){ ?> ?>
-              <option value="<?php echo $company['CName']; ?>"><?php echo $company['CName']; ?></option>
+              <option value="<?php echo $company['CName']; ?>"<?php echo (isset($_GET["company"]) && $company['CName'] == $_GET["company"]) ? "selected" : ""; ?>><?php echo $company['CName']; ?></option>
             <?php } ?>
           </select>
         </div>
@@ -186,7 +186,7 @@ $companyList = getCompanies();
                   </select>
                 </div></td>
                 <!-- Geburtstag -->
-                <td><p id="bd-<?php echo $row['PNr'];?>"><?php echo $row['Birthday'];?></p><input type="date" id="edit-bd-<?php echo $row['PNr'];?>" value="<?php echo $row['Birthday'];?>" max="<?php echo date('Y-m-d') ?>"></td>
+                <td><p id="bd-<?php echo $row['PNr'];?>"><?php echo date_format(date_create($row['Birthday']), 'd.m.Y');?></p><input type="date" id="edit-bd-<?php echo $row['PNr'];?>" value="<?php echo $row['Birthday'];?>" max="<?php echo date('Y-m-d') ?>" ></td>
                 <!-- Aktionen -->
                 <td><form action="" method="post">
                   <a class="del" onclick="deleteEntry(<?php echo $row['PNr'];?>)"><img class="icon-btn" src="../images/delete.png"></a>
@@ -207,6 +207,7 @@ $companyList = getCompanies();
 $(document).ready(function()
     {
       $("#resultTable").tablesorter();
+      departmentChangeSearch('company','departmentList','depSelector');
     }
 );
 </script>

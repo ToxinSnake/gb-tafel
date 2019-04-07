@@ -1,12 +1,11 @@
-<!DOCTYPE html>
-
-<!--
-* Made by Arne Otten
-* www.mj-12.net
-* 08/07/2018
--->
-
 <?php
+session_start();
+if(!isset($_SESSION["username"])){
+  $_SESSION["referer"] = $_SERVER["PHP_SELF"];
+  header("Location: login.php"); 
+  exit;
+}
+
 include "../app/new_methods.php";
 
 $msg = NULL;
@@ -26,6 +25,15 @@ if(!empty($_POST["firstNameInput"]) && !empty($_POST["lastNameInput"]) && !empty
 //Alle Firmen für Iteration
 $companyList = getCompanies();
  ?>
+<!DOCTYPE html>
+
+<!--
+* Made by Arne Otten
+* www.mj-12.net
+* 08/07/2018
+-->
+
+
 
 <html lang="en">
 <head>

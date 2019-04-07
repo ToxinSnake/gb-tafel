@@ -1,24 +1,23 @@
-<!DOCTYPE html>
-
-<!--
-* Made by Arne Otten
-* www.mj-12.net
-* 26/02/2019
--->
-
 <?php
+session_start();
+if(!isset($_SESSION["username"])){
+  $_SESSION["referer"] = $_SERVER["PHP_SELF"];
+  header("Location: login.php"); 
+  exit;
+}
+
 include "../app/companies_methods.php";
 
 $msg = NULL;
 
 //Firma hinzufügen
-if(!empty($_POST["companyInput"])){
+if(isset($_POST["companyInput"])){
   try{
     $result = addCompanyToDb($_POST["companyInput"]);
     if($result == true){
-      $msg = $_POST["companyInput"]." erfolgreich hinzugefügt!";
+      $msg = "{$_POST["companyInput"]} erfolgreich hinzugefügt!";
     } else {
-      $msg = $_POST["companyInput"]." hinzugefügen gescheitert!";
+      $msg = "{$_POST["companyInput"]} hinzugefügen gescheitert!";
     } 
   } 
   catch (Exception $e){
@@ -27,7 +26,7 @@ if(!empty($_POST["companyInput"])){
 
 
 //Abteilung hinzufügen
-} else if(!empty($_POST["departmentInput"]) && !empty($_POST["companyList"])){
+} else if(isset($_POST["departmentInput"]) && isset($_POST["companyList"])){
   try{
     $result = addDepartmentToDb($_POST["companyList"] ,$_POST["departmentInput"]);
     if($result == true){
@@ -41,8 +40,9 @@ if(!empty($_POST["companyInput"])){
   }
 
 //Firma löschen
-} else if(!empty($_POST["delCompany"])){
+} else if(isset($_POST["delCompany"])){
   try{
+    if($_SESSION["privilege"] != "admin") throw new Exception("Nur Administatoren können diese Aktion ausführen!");
     $result = deleteCompany($_POST["delCompany"]);
     if($result == true){
       $msg = $_POST["delCompany"]." gelöscht!";
@@ -55,15 +55,30 @@ if(!empty($_POST["companyInput"])){
   }
 
 //Abteilung löschen
-} else if(!empty($_POST["delDepartment"]) && !empty($_POST["delDepCompany"])){
-  $result = deleteDepartment($_POST["delDepCompany"], $_POST["delDepartment"]);
-  if($result == true){
-    $msg = $_POST["delDepartment"]." gelöscht!";
-  } else {
-    $msg = "Fehler beim löschen von ".$_POST["delDepartment"]."!";
-  }    
+} else if(isset($_POST["delDepartment"]) && isset($_POST["delDepCompany"])){
+  try {
+    if($_SESSION["privilege"] != "admin") throw new Exception("Nur Administatoren können diese Aktion ausführen!");
+    $result = deleteDepartment($_POST["delDepCompany"], $_POST["delDepartment"]);
+    if($result == true){
+      $msg = $_POST["delDepartment"]." gelöscht!";
+    } else {
+      $msg = "Fehler beim löschen von ".$_POST["delDepartment"]."!";
+    }   
+  } catch (Exception $e){
+    $msg = $e->getMessage();
+  }
+   
 }
 ?>
+<!DOCTYPE html>
+
+<!--
+* Made by Arne Otten
+* www.mj-12.net
+* 26/02/2019
+-->
+
+
 
 <html lang="en">
 <head>
@@ -121,7 +136,7 @@ if(!empty($_POST["companyInput"])){
             <option value="<?php echo $company['CName']; ?>"><?php echo $company['CName']; ?></option>
             <?php } ?>
           </select>
-          <input class="button-primary delete" value="Firma löschen" type="submit">
+          <input class="button-primary <?php echo ($_SESSION["privilege"] == "admin") ? "delete" : "disabled"; ?>" value="Firma löschen" type="submit" <?php echo ($_SESSION["privilege"] == "admin") ? "" : "disabled"; ?>>
         </form>
 
         <form action="" method="post" onsubmit="return confirmDeleteDepartment('departmentList')">
@@ -137,14 +152,12 @@ if(!empty($_POST["companyInput"])){
               <option value=""></option>
             </select>
           </div>
-          <input class="button-primary delete" value="Abteilung löschen" type="submit">
-        </form>
-        
+          <input class="button-primary <?php echo ($_SESSION["privilege"] == "admin") ? "delete" : "disabled"; ?>" value="Abteilung löschen" type="submit" <?php echo ($_SESSION["privilege"] == "admin") ? "" : "disabled"; ?>>
+        </form>        
       </div>
 
       <!-- Rechts -->
       <div class="six columns manage">
-      
         <form action="" method="post" style="margin-bottom: 5em;">
           <input type="text" name="companyInput" placeholder="Neue Firma" value="<?php echo isset($_POST["companyInput"]) ? htmlspecialchars($_POST['companyInput']) : '' ?>" maxlength="60" autofocus required>
           <input class="button-primary" value="Hinzufügen" type="submit">

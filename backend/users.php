@@ -6,6 +6,12 @@ if(!isset($_SESSION["username"])){
   exit;
 }
 
+//Nur Admins bekommen Zugang
+if($_SESSION["privilege"] != "admin"){ 
+  header('HTTP/1.0 403 Forbidden');
+  exit('Forbidden');
+}
+
 require_once "../app/users_methods.php";
 
 if(isset($_POST["addUserUsername"]) && isset($_POST["addUserPassword"]) && isset($_POST["addUserPrivilege"])){

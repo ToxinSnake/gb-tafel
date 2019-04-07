@@ -1,11 +1,17 @@
-<!DOCTYPE html>
-<!--
-* Made by Arne Otten
-* www.mj-12.net
-* 08/07/2018
--->
-
 <?php
+session_start();
+if(!isset($_SESSION["username"])){
+  $_SESSION["referer"] = $_SERVER["PHP_SELF"];
+  header("Location: login.php"); 
+  exit;
+}
+
+//Nur Admins bekommen Zugang
+if($_SESSION["privilege"] != "admin"){ 
+  header('HTTP/1.0 403 Forbidden');
+  exit('Forbidden');
+}
+
 include "../app/settings_methods.php";
 
 //Verbindung testen
@@ -20,6 +26,12 @@ if(isset($_GET["createdb"])){
 }
 
 ?>
+<!DOCTYPE html>
+<!--
+* Made by Arne Otten
+* www.mj-12.net
+* 08/07/2018
+-->
 
 <html lang="en">
 <head>

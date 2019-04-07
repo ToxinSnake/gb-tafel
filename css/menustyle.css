@@ -34,6 +34,12 @@ input[type="submit"].button-primary.delete:hover {
   background-color: #c82333;
 }
 
+input[type="submit"].button-primary.disabled {
+  background-color: grey;
+  border-color: grey;
+  cursor: not-allowed;
+}
+
 a.del{
   border-radius: .25rem;
   background-color: #dc3545;
@@ -112,6 +118,12 @@ input, select{
 }
 
 .six.columns.manage{
+  text-align: center;
+  margin-left: 0%;
+}
+
+.twelve.columns.manage{
+  display: block;
   text-align: center;
   margin-left: 0%;
 }
