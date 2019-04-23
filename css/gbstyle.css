@@ -1,62 +1,113 @@
 /*
 * Made by Arne Otten
 * www.mj-12.net
-* 04/05/2018
+* 17/12/2018
 */
 
-.wip {
-  /*background-color: #EEE;*/
-  outline: 1px solid;
+#header {
+  padding: 20px 0px 20px 20px;
 }
 
-body {
-  background: #e6f0ff;
+#header img{
+  max-width: 300px;
+  float: left;
+  clear: right;
 }
 
-#main-left {
-  font-size: 1.5em;
-  padding-top: 1em;
-  /*border-right: 5px solid black;*/
+#header h4 {
+  position: absolute;
+  white-space: nowrap;
+  left: 400px;
+  padding-left: 20px;
+  border: 0;
+  border-left: 3px;
+  border-style: solid;
+  line-height: 2;
 }
 
-#main-left table {
-
+#left {
+  width: 50%;
+  margin: 0;
+  padding: 20px 20px 0 20px;
 }
 
-#main-left td {
-  border-bottom: 0px;
+#left table {
+  table-layout: fixed;
+  width: 100%;
 }
 
-#main-left tr#currentDay{
+td {
+  width: 25%;
+}
+
+#left table.past {
+  border: 5px solid #00305f;
+}
+
+#left table.current {
+  border: 5px solid #005300;
+}
+
+#left tr:nth-child(even) {
+  background-color: #f2f2f2;
+}
+
+#left thead {
+  color: white;  
+  font-size: 30px;
+}
+
+#left thead.past {
+  background-color: #00305f;
+}
+
+#left thead.current {
+  background-color: #005300;
+}
+
+#left th {
+  text-align: center;
+  padding: 5px 5px;
+}
+
+#left td {
+  text-align: center;
+  font-size: 20px;
+  border-bottom-color: black;
+}
+
+#left tr.current{
   background-color: #99ff99;
 }
 
-#main-left td.date{
-  text-align: right;
-  margin-left: 30px;
+#right {
+  width: 50%;
+  margin: 0;
+  padding: 20px 20px 0 20px;
 }
 
-#main-right {
-  padding-top: 1em;
-}
-
-#main-right article {
+#right article {
   position: relative;
   background-color: #fff;
   border: 1px solid #ddd;
 	border-radius: 10px;
-  margin: 0 3em 2em 0;
+  margin: 0 0 2em 0;
   padding: 10px;
-  min-height: 240px;
+  min-height: 100px;
 }
 
-#main-right article p {
-  font-size: 16px;
-}
-
-#main-right article p.createdDate{
+#right article p.createdDate{
   float: right;
   position: absolute;
   right: 1em;
   bottom: 1%;
+  margin: 10px 0px 0px 0px;
+}
+
+#right article p.link{
+  float: left;
+  position: absolute;
+  left: 1em;
+  bottom: 1%;
+  margin: 10px 0px 0px 0px;
 }

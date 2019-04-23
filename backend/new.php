@@ -13,6 +13,7 @@ $msg = NULL;
 if(!empty($_POST["firstNameInput"]) && !empty($_POST["lastNameInput"]) && !empty($_POST["birthdayInput"]) && !empty($_POST["company"]) && !empty($_POST["department"])){
   try{
     $result = addToDB($_POST["firstNameInput"], $_POST["lastNameInput"], $_POST["birthdayInput"], $_POST["company"], $_POST["department"]);
+    unset($_POST);
   }
   catch(Exception $e){
     $msg = $e->getMessage();
