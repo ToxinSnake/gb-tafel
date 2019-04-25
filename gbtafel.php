@@ -110,7 +110,7 @@ usort($entries, function ($feed1, $feed2) {
         if($entry != NULL){ ?>
       <table class="u-full-width past">
         <thead class="past">
-          <th class="leftpad"><?php echo strtr(date("d. F", time() + (-31 * 24 * 60 * 60)), $trans); ?></th>
+          <th class="leftpad"><?php echo strtr(date("d. F", time() + (-$dayCount * 24 * 60 * 60)), $trans); ?></th>
           <th style="text-align: left;"><?php echo strtr(date("l", time() + (-$dayCount * 24 * 60 * 60)), $trans); ?></th>
           <th></th>
         </thead>
