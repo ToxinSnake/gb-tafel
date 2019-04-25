@@ -92,9 +92,9 @@ usort($entries, function ($feed1, $feed2) {
         foreach($bdsetToday as $row) { 
         ?>
           <tr>
-            <td class="leftpad"><?php echo "{$row[Firstname]} {$row[Lastname]}" ?></td>
-            <td><?php echo "{$row[CName]}" ?></td>
-            <td><?php echo "{$row[DName]}" ?></td>
+            <td class="leftpad"><?php echo "{$row['Firstname']} {$row['Lastname']}" ?></td>
+            <td><?php echo "{$row['CName']}" ?></td>
+            <td><?php echo "{$row['DName']}" ?></td>
           </tr>
 
       <?php  
@@ -110,40 +110,50 @@ usort($entries, function ($feed1, $feed2) {
         if($entry != NULL){ ?>
       <table class="u-full-width past">
         <thead class="past">
-          <th class="leftpad"><?php echo date_format(date_create($row['Birthday']), 'd.m.Y');?></th>
-          <th style="text-align: left;">WOCHENTAG</th>
+          <th class="leftpad"><?php echo strtr(date("d. F", time() + (-31 * 24 * 60 * 60)), $trans); ?></th>
+          <th style="text-align: left;"><?php echo strtr(date("l", time() + (-$dayCount * 24 * 60 * 60)), $trans); ?></th>
           <th></th>
         </thead>
         <tbody>
           <?php foreach($entry as $row) { ?>
           <tr>
-            <td class="leftpad"><?php echo "{$row[Firstname]} {$row[Lastname]}" ?></td>
-            <td><?php echo "{$row[CName]}" ?></td>
-            <td><?php echo "{$row[DName]}" ?></td>
+            <td class="leftpad"><?php echo "{$row['Firstname']} {$row['Lastname']}" ?></td>
+            <td><?php echo "{$row['CName']}" ?></td>
+            <td><?php echo "{$row['DName']}" ?></td>
           </tr>
           <?php } ?>
         </tbody>
       </table>          
       <?php 
-        } 
+        }
+        $dayCount++; 
       }
       ?>
     </div>
 
-    
-
     <div class="six columns" id="right">
-     <?php $count = 0;
-     foreach($entries as $entry){ ?>
       <article>
-        <h2><?php echo $entry->title ?></h2>
-        <p><?php echo $entry->description ?></p>
-        <p class="createdDate"> <?php echo strftime('%d.%m.%Y %H:%M', strtotime($entry->pubDate)) ?> </p>
-        <p class="link"><a href="<?php echo $entry->link ?>">Link</a> (<?php echo parse_url($entry->link)['host'] ?>)</p>
+        <h2>BELADEN VERBOTEN!</h2>
+        <p>Gestern verreckt mir die Karre, heute Stress mit der alten UND JETZT DIESER SCHEIß! Robert! Soll ich es vielleicht noch größer schreiben? Beladen verboten!</p>
+        <p class="createdDate"> <?php echo strftime('%d.%m.%Y %H:%M', time()) ?> </p>
+        <p class="link">Arne Otten</p>
       </article>
-      <?php if(++$count >= $NUMITEMS) break;    
-     }?>
     </div>
+
+    <!--
+    <div class="six columns" id="right">
+     <?php //$count = 0;
+     //foreach($entries as $entry){ ?>
+      <article>
+        <h2><?php //echo $entry->title ?></h2>
+        <p><?php //echo $entry->description ?></p>
+        <p class="createdDate"> <?php //echo strftime('%d.%m.%Y %H:%M', strtotime($entry->pubDate)) ?> </p>
+        <p class="link"><a href="<?php //echo $entry->link ?>">Link</a> (<?php //echo parse_url($entry->link)['host'] ?>)</p>
+      </article>
+      <?php //if(++$count >= $NUMITEMS) break;    
+     //}?>
+    </div>
+    -->
   </div>
 
 <!-- End Document
