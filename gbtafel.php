@@ -1,20 +1,21 @@
-<!DOCTYPE html>
-
-
 <?php
-include "./app/board_methods.php";
+require_once "./app/board_methods.php";
 $configs = include ('./app/config.php');
 
 setlocale (LC_ALL, 'de_DE');
 
-//Geburtstage
-$bdsetPast = array_reverse(getPast()->fetchAll());
-$bdsetUpcoming = getCurrentAndUpcoming();
-$date = 0;
+//Tag und Zeit für Kopf
 $currentDay = strtr(date('l'), $trans);
 $currentDate = date('d.m.Y');
-if(empty($bdsetUpcoming)){
-  $msg = "Keine Verbindung zur Datenbank möglich.";
+
+//Geburtstage
+$countToday = count(getTodayBirthdays()->fetchAll());
+if($countToday > 0) {
+  $bdsetToday = getTodayBirthdays();
+}
+$bdsetsPast = array_fill(0, $configs['PAST_BIRTHDAYS']-1, NULL);
+for($i = 1; $i <= $configs['PAST_BIRTHDAYS']; $i++){
+  $bdsetsPast[$i-1] = getPastBirthdays($i);
 }
 
 //Nachrichten
@@ -31,7 +32,7 @@ usort($entries, function ($feed1, $feed2) {
     return strtotime($feed2->pubDate) - strtotime($feed1->pubDate);
 });
 ?>
-
+<!DOCTYPE html>
 <html lang="en">
 <head>
 
@@ -54,7 +55,7 @@ usort($entries, function ($feed1, $feed2) {
   –––––––––––––––––––––––––––––––––––––––––––––––––– -->  
   <link rel="stylesheet" href="css/normalize.css">
   <link rel="stylesheet" href="css/skeleton.css">
-  <link rel="stylesheet" href="css/newgbstyle.css">
+  <link rel="stylesheet" href="css/gbstyle.css">
 
   <!-- Favicon
   –––––––––––––––––––––––––––––––––––––––––––––––––– -->
@@ -68,108 +69,68 @@ usort($entries, function ($feed1, $feed2) {
 <body onload="startTime()">
   <div class="row">
 
+  <!-- Logo, Datum Uhrzeit -->
     <div class="twelve columns" id="header">
       <img src="images/trauco.png">
       <h4 id="clock"></h4><br>
       <h4 style="margin-top: 10px"><?php echo "$currentDay, $currentDate"?></h4>
-
     </div>
 
-    <div class="six columns" id="left">
-      <table class="u-full-width">
-        <thead>
-          <th>Datum</th>
-          <th>Tag</th>
-          <th>Name</th>
-          <th>Alter</th>
+    <div class="six columns" id="left">    
+      <!-- Heutige Geburtstage -->
+      <?php 
+      if($countToday > 0){
+      ?> 
+      <table class="u-full-width current">
+        <thead class="current">
+          <th class="leftpad">Heute</th>
+          <th></th>
+          <th></th>
         </thead>
         <tbody>
         <?php 
-        //Past Birthdays
-        $count = 1;
-        foreach ($bdsetPast as $row){
-            //check if the current date is the same as the last
-            if((substr($row['Birthday'],8,2).".".substr($row['Birthday'],5,2)) == $date){
-                $doubleDate = TRUE;
-            } else {
-                $doubleDate = FALSE;
-            }
-            $date = substr($row['Birthday'],8,2).".".substr($row['Birthday'],5,2);
-                
-            //Generate weekday from unix-timestamp and translate english weekdays to german
-            $weekday = date('l', strtotime(date('Y')."-".substr($row['Birthday'],5,2)."-".substr($row['Birthday'],8,2)));
-            $weekday = strtr($weekday, $trans);              
-            $age = date('Y') - substr($row['Birthday'],0,4);               
-            ?>
-            <tr <?php if($count >= 3) echo "style=\"border-bottom: 5px solid black;\""?>>
-             	<td><?php echo $doubleDate == TRUE ? "" : $date; ?></td>
-            	<td><?php echo $doubleDate == TRUE ? "" : $weekday; ?></td>
-            	<td><?php echo "{$row['Firstname']} {$row['Lastname']}";?></td>
-            	<td><?php echo $age; ?></td>
-          	</tr>
- 			<?php 
- 			$count++;
-            } //END IF
-   
-        //Current and Upcoming Birthdays
-        foreach ($bdsetUpcoming as $row){
-            if(date('m-d') == substr($row['Birthday'],5,5)){
-                //check if the current date is the same as the last
-                if((substr($row['Birthday'],8,2).".".substr($row['Birthday'],5,2)) == $date){
-                  $doubleDate = TRUE;
-                } else {
-                  $doubleDate = FALSE;
-                }
-                $date = substr($row['Birthday'],8,2).".".substr($row['Birthday'],5,2);
-
-                //translate english weekdays to german
-                $weekday = date('l');
-                $weekday = strtr($weekday, $trans);
-
-                //calculate age
-                $age = date('Y') - substr($row['Birthday'],0,4);
-            ?>
-		<tr class="current"> 
-            <td><?php echo $doubleDate == TRUE ? "" : $date; ?></td>
-            <td><?php echo $doubleDate == TRUE ? "" : $weekday; ?></td>
-            <td><?php echo "{$row['Firstname']} {$row['Lastname']}";?></td>
-            <td><?php echo $age; ?></td>
-		</tr> 
-        <?php } //ENDIF
-
-        // Other days
-          //if birthday is not today
-          else {
-
-            //check if the current date is the same as the last
-            if((substr($row['Birthday'],8,2).".".substr($row['Birthday'],5,2)) == $date){
-              $doubleDate = TRUE;
-            } else {
-              $doubleDate = FALSE;
-            }
-            $date = substr($row['Birthday'],8,2).".".substr($row['Birthday'],5,2);
-
-            //Generate weekday from unix-timestamp and translate english weekdays to german
-            $weekday = date('l', strtotime(date('Y')."-".substr($row['Birthday'],5,2)."-".substr($row['Birthday'],8,2)));
-            $weekday = strtr($weekday, $trans);
-
-            $age = date('Y') - substr($row['Birthday'],0,4);
-           ?>
-          <tr>
-            <td><?php echo $doubleDate == TRUE ? "" : $date; ?></td>
-            <td><?php echo $doubleDate == TRUE ? "" : $weekday; ?></td>
-            <td><?php echo "{$row['Firstname']} {$row['Lastname']}";?></td>
-            <td><?php echo $age; ?></td>
-          </tr><!-- End of other days -->
-          <?php
-            } //ENDIF
-            $filled = FALSE;
-          } //ENDFOREACH
+        foreach($bdsetToday as $row) { 
         ?>
+          <tr>
+            <td class="leftpad"><?php echo "{$row[Firstname]} {$row[Lastname]}" ?></td>
+            <td><?php echo "{$row[CName]}" ?></td>
+            <td><?php echo "{$row[DName]}" ?></td>
+          </tr>
 
+      <?php  
+        } 
+      } ?>
         </tbody>
       </table>
+         
+      <!-- Vergangene Geburtstage -->
+      <?php
+      $dayCount = 1;
+      foreach($bdsetsPast as $entry) { 
+        if($entry != NULL){ ?>
+      <table class="u-full-width past">
+        <thead class="past">
+          <th class="leftpad"><?php echo date_format(date_create($row['Birthday']), 'd.m.Y');?></th>
+          <th style="text-align: left;">WOCHENTAG</th>
+          <th></th>
+        </thead>
+        <tbody>
+          <?php foreach($entry as $row) { ?>
+          <tr>
+            <td class="leftpad"><?php echo "{$row[Firstname]} {$row[Lastname]}" ?></td>
+            <td><?php echo "{$row[CName]}" ?></td>
+            <td><?php echo "{$row[DName]}" ?></td>
+          </tr>
+          <?php } ?>
+        </tbody>
+      </table>          
+      <?php 
+        } 
+      }
+      ?>
     </div>
+
+    
 
     <div class="six columns" id="right">
      <?php $count = 0;

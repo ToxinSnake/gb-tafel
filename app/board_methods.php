@@ -9,13 +9,48 @@ function connect()
         try {
             $dbh = new PDO("sqlite:" . $path);
             return $dbh;
-        } // endtry
+        } 
         catch (PDOException $e) {
             return CONNECTION_FAILED;
-        } // endcatch
+        }
     } else {
         return DB_DOES_NOT_EXISTS;
-    } // endelse
+    }
+}
+
+function getTodayBirthdays(){
+    $pdo = connect();
+    if (! ($pdo instanceof PDO)) {
+        throw new Exception("Verbindung zu DB fehlgeschlagen!");
+    }
+    $sql = 
+    "SELECT Person.Firstname, Person.Lastname, Company.CName, Department.DName
+     FROM Person
+     INNER JOIN Company_Department ON Person.Company_Department_Id IS Company_Department.CoDeId
+     INNER JOIN Company ON CId IS Company.CNr
+     INNER JOIN Department ON DId IS Department.DNr
+     WHERE strftime('%m-%d', Birthday) IS strftime('%m-%d',date('now'));";
+     
+     return $pdo->query($sql);
+}
+
+/**
+ * Gibt alle Geburtstage an welche, ausgehend von Heute, mitgegebene Anzahl Tage in der Vergangenheit liegen
+ */
+function getPastBirthdays($numberOfDays){
+    $pdo = connect();
+    if (! ($pdo instanceof PDO)) {
+        throw new Exception("Verbindung zu DB fehlgeschlagen!");
+    }
+    $sql = 
+    "SELECT Person.Firstname, Person.Lastname, Company.CName, Department.DName
+     FROM Person
+     INNER JOIN Company_Department ON Person.Company_Department_Id IS Company_Department.CoDeId
+     INNER JOIN Company ON CId IS Company.CNr
+     INNER JOIN Department ON DId IS Department.DNr
+     WHERE strftime('%m-%d', Birthday) IS strftime('%m-%d',date('now','-".$numberOfDays." day'));";
+     
+     return $pdo->query($sql);
 }
 
 /**

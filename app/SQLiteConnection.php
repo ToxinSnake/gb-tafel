@@ -53,7 +53,6 @@ class SQLiteConnection{
       INSERT INTO User (Username, Password, Privilege) VALUES (
         "admin","'.$defaultPass.'", "admin"
       );';
-    echo $sqlInit;
     $pdo;
 
     if(file_exists($path)){
