@@ -1,5 +1,5 @@
 <?php
-require_once "./app/board_methods.php";
+include "./app/board_methods.php";
 $configs = include ('./app/config.php');
 
 setlocale (LC_ALL, 'de_DE');
@@ -9,18 +9,23 @@ $currentDay = strtr(date('l'), $trans);
 $currentDate = date('d.m.Y');
 
 //Geburtstage
+$noEntry = true;
 $countToday = count(getTodayBirthdays()->fetchAll());
 if($countToday > 0) {
   $bdsetToday = getTodayBirthdays();
 }
+//Vergangene Geburtstage
 $bdsetsPast = array_fill(0, $configs['PAST_BIRTHDAYS']-1, NULL);
 for($i = 1; $i <= $configs['PAST_BIRTHDAYS']; $i++){
   $bdsetsPast[$i-1] = getPastBirthdays($i);
 }
 
+//Interne News holen
+$internalNews = getNews();
+
 //Nachrichten
 $feed = $configs['FEED'];
-$NUMITEMS = 3;
+$NUMITEMS = 2;
 
 //Read each feed's items
 $entries = array();
@@ -80,6 +85,7 @@ usort($entries, function ($feed1, $feed2) {
       <!-- Heutige Geburtstage -->
       <?php 
       if($countToday > 0){
+        $noEntry = false;
       ?> 
       <table class="u-full-width current">
         <thead class="current">
@@ -96,18 +102,20 @@ usort($entries, function ($feed1, $feed2) {
             <td><?php echo "{$row['CName']}" ?></td>
             <td><?php echo "{$row['DName']}" ?></td>
           </tr>
-
-      <?php  
-        } 
-      } ?>
+      <?php 
+        } ?> 
         </tbody>
       </table>
+      <?php 
+      } ?>
+
          
       <!-- Vergangene Geburtstage -->
       <?php
       $dayCount = 1;
       foreach($bdsetsPast as $entry) { 
-        if($entry != NULL){ ?>
+        if(getRowCount($entry->queryString) > 0){
+          $noEntry = false; ?>
       <table class="u-full-width past">
         <thead class="past">
           <th class="leftpad"><?php echo strtr(date("d. F", time() + (-$dayCount * 24 * 60 * 60)), $trans); ?></th>
@@ -127,33 +135,36 @@ usort($entries, function ($feed1, $feed2) {
       <?php 
         }
         $dayCount++; 
+      } if($noEntry){ ?>
+      <p class="nothing">¯\_(ツ)_/¯<br>Keine Geburtstage in nächster Zeit</p>
+      <?php
       }
       ?>
     </div>
 
     <div class="six columns" id="right">
-      <article>
-        <h2>BELADEN VERBOTEN!</h2>
-        <p>Gestern verreckt mir die Karre, heute Stress mit der alten UND JETZT DIESER SCHEIß! Robert! Soll ich es vielleicht noch größer schreiben? Beladen verboten!</p>
-        <p class="createdDate"> <?php echo strftime('%d.%m.%Y %H:%M', time()) ?> </p>
-        <p class="link">Arne Otten</p>
+     
+    <!-- Interne News -->
+    <?php if($internalNews["Publish"]) { ?>
+      <article class="internal">
+        <h2><?php echo $internalNews["Headline"]; ?></h2>
+        <p><?php echo $internalNews["Content"] ?></p>
+        <p class="createdDate"> <?php echo strtr(strftime('%A, %d.%m.%Y %H:%M', $internalNews["Date"]), $trans) ?> </p>
+        <p class="link"><?php echo $internalNews["Author"] ?></p>
       </article>
-    </div>
+      <?php } ?>
 
-    <!--
-    <div class="six columns" id="right">
-     <?php //$count = 0;
-     //foreach($entries as $entry){ ?>
+     <?php $count = 0;
+     foreach($entries as $entry){ ?>
       <article>
-        <h2><?php //echo $entry->title ?></h2>
-        <p><?php //echo $entry->description ?></p>
-        <p class="createdDate"> <?php //echo strftime('%d.%m.%Y %H:%M', strtotime($entry->pubDate)) ?> </p>
-        <p class="link"><a href="<?php //echo $entry->link ?>">Link</a> (<?php //echo parse_url($entry->link)['host'] ?>)</p>
+        <h2><?php echo $entry->title ?></h2>
+        <p><?php echo $entry->description ?></p>
+        <p class="createdDate"> <?php echo strftime('%d.%m.%Y %H:%M', strtotime($entry->pubDate)) ?> </p>
+        <p class="link"><a href="<?php echo $entry->link ?>">Link</a> (<?php echo parse_url($entry->link)['host'] ?>)</p>
       </article>
-      <?php //if(++$count >= $NUMITEMS) break;    
-     //}?>
+      <?php if(++$count >= $NUMITEMS) break;    
+     }?>
     </div>
-    -->
   </div>
 
 <!-- End Document

@@ -14,6 +14,7 @@ if($_SESSION["privilege"] != "admin"){
 
 require_once "../app/users_methods.php";
 
+//Neuer Benutzer
 if(isset($_POST["addUserUsername"]) && isset($_POST["addUserPassword"]) && isset($_POST["addUserPrivilege"])){
   try {
     $status = addUser($_POST["addUserUsername"], $_POST["addUserPassword"], $_POST["addUserPrivilege"]);
@@ -27,6 +28,7 @@ if(isset($_POST["addUserUsername"]) && isset($_POST["addUserPassword"]) && isset
   }
 }
 
+//Privilegien ändern
 elseif(isset($_POST["privEditUser"]) && isset($_POST["privEditPriv"])){
   try {
     $status = changePrivilege($_POST["privEditUser"], $_POST["privEditPriv"]);
@@ -40,6 +42,10 @@ elseif(isset($_POST["privEditUser"]) && isset($_POST["privEditPriv"])){
   }
 }
 
+//Passwort ändern
+//TODO
+
+//Benutzer löschen
 elseif(isset($_POST["deleteUser"])){
   try {
     $status = deleteUser($_POST["deleteUser"]);

@@ -108,6 +108,20 @@ input, select{
   margin: 1em auto;
 }
 
+input[type="checkbox"]#publish {
+  max-width: 10px;
+  min-width: 0px;
+  margin-right: 1em;
+}
+
+textarea {
+  min-width: 400px;
+  max-width: 400px;
+  min-height: 115px;
+  display: block;
+  margin: 1em auto;
+}
+
 .twelve.columns#menu{
   text-align: center;
   margin-top: 10%;

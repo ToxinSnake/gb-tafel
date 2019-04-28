@@ -31,6 +31,13 @@
   padding: 20px 20px 0 20px;
 }
 
+#left p.nothing {
+  text-align: center;
+  vertical-align: middle;
+  margin-top: 30%;
+  font-size: 30px;
+}
+
 #left table {
   table-layout: fixed;
   width: 100%;
@@ -115,4 +122,9 @@ td {
   left: 1em;
   bottom: 1%;
   margin: 10px 0px 0px 0px;
+}
+
+#right article.internal {
+  background-color: #ccf1ff;
+  border: 3px solid #ddd;
 }

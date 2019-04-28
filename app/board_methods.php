@@ -1,5 +1,10 @@
 <?php
 
+const CONNECTION_FAILED = 100;
+const CREATION_FAILED = 101;
+const MISSING_TABLES = 102;
+const DB_DOES_NOT_EXISTS = 103;
+
 function connect()
 {
     $configs = include ('config.php');
@@ -51,6 +56,24 @@ function getPastBirthdays($numberOfDays){
      WHERE strftime('%m-%d', Birthday) IS strftime('%m-%d',date('now','-".$numberOfDays." day'));";
      
      return $pdo->query($sql);
+}
+
+function getRowCount($query){
+    $pdo = connect();
+    if (! ($pdo instanceof PDO)) {
+        throw new Exception("Verbindung zu DB fehlgeschlagen!");
+    }
+    return count($pdo->query($query)->fetchAll());
+}
+
+function getNews(){
+    $pdo = connect();
+    if(!($pdo instanceof PDO)){
+      throw new Exception("Verbindung zur DB gescheitert!");
+    }
+
+    $sql = "SELECT Headline, Content, Author, Date, Publish FROM News";
+    return $pdo->query($sql)->fetch();
 }
 
 /**

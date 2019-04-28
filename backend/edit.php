@@ -6,40 +6,42 @@ if(!isset($_SESSION["username"])){
   exit;
 }
 
-//Nur Admins bekommen Zugang
-if($_SESSION["privilege"] != "admin"){ 
-  header('HTTP/1.0 403 Forbidden');
-  exit('Forbidden');
+require_once "../app/edit_methods.php";
+
+//News updaten
+if(isset($_POST["headline"])) {
+  $headline = $_POST["headline"];
+  $content = "";
+  $publish;
+
+  if(isset($_POST["content"])){
+    $content = $_POST["content"];
+  }
+  if(isset($_POST["publish"])){
+    $publish = 1;
+  } else {
+    $publish = 0;
+  }
+
+  updateNews($headline, $content, $publish, $_SESSION["username"]);
 }
 
-require_once "../app/settings_methods.php";
+$currentNews = getNews();
 
-//Verbindung testen
-$result = "Hier stehen Testergebnisse.";
-
-if(isset($_GET["testcon"])){
-  $result = testConnection();
-}
-
-if(isset($_GET["createdb"])){
-  $result = createdb();
-}
-
-?>
+ ?>
 <!DOCTYPE html>
 <!--
 * Made by Arne Otten
 * www.mj-12.net
 * 08/07/2018
 -->
-
 <html lang="en">
 <head>
 
   <!-- Basic Page Needs
   –––––––––––––––––––––––––––––––––––––––––––––––––– -->
   <meta charset="utf-8">
-  <title>Einstellungen</title>
+  <title>Tafel bearbeiten</title>
   <meta name="description" content="">
   <meta name="author" content="Arne Otten">
 
@@ -69,11 +71,15 @@ if(isset($_GET["createdb"])){
   <div class="container">
     <div class="row">
       <div class="twelve columns" id="menu">
-        <h3>Einstellungen</h3>
-        <p><?php echo $result;?></p><br>
-        <a class="button button-primary" href="?testcon">DB-Verbindung testen</a>
-        <a class="button button-primary" href="?createdb">DB neu anlegen</a>
-        <a class="button button" href="index.php" style="margin-top: 3em;">Zurück</a>
+        <h3>Tafel bearbeiten</h3>
+      <?php if(!empty($msg)){ ?> <p> <?php echo $msg; ?> </p> <?php } ?>
+        <form action="" method="post">
+          <input type="text" name="headline" value="<?php echo $currentNews["Headline"]; ?>" placeholder="Überschrift"  maxlength="70" autofocus required>
+          <textarea name="content"><?php echo $currentNews["Content"]; ?></textarea>
+          <input type="checkbox" name="publish" id="publish" value="1" <?php if($currentNews["Publish"]) echo "checked"; ?>><label style="display: inline;" for="publish">Veröffentlichen</label><br>
+          <input class="button-primary" value="Absenden" type="submit">
+        </form>
+        <a class="button button" href="index.php">Zurück</a>
     </div>
   </div>
 </div>

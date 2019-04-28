@@ -32,8 +32,7 @@ class SQLiteConnection{
       
       CREATE TABLE Company (
       CNr INTEGER PRIMARY KEY,
-      CName TEXT NOT NULL
-      );
+      CName TEXT NOT NULL);
       
       CREATE TABLE Department (
       DNr INTEGER PRIMARY KEY,
@@ -49,10 +48,20 @@ class SQLiteConnection{
       Username TEXT NOT NULL,
       Password TEXT NOT NULL,
       Privilege TEXT NOT NULL);
+
+      CREATE TABLE News (
+      Headline TEXT,
+      Content TEXT,
+      Author TEXT,
+      Date TEXT,
+      Publish BOOLEAN);
+
+      INSERT INTO News (Headline, Content, Publish) VALUES (
+        "Überschrift", "Text hier eingeben...", 0);
       
       INSERT INTO User (Username, Password, Privilege) VALUES (
-        "admin","'.$defaultPass.'", "admin"
-      );';
+        "admin", "'.$defaultPass.'", "admin");'
+    ;
     $pdo;
 
     if(file_exists($path)){
