@@ -18,6 +18,13 @@ p.response {
   text-align: center;
 }
 
+p.nothing {
+  text-align: center;
+  vertical-align: middle;
+  margin-top: 10%;
+  font-size: 30px;
+}
+
 .button{
   min-width: 230px;
   max-width: 400px;

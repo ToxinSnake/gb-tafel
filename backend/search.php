@@ -26,12 +26,14 @@ if(isset($_POST["pnr"]) && isset($_POST["changeFirstName"]) && isset($_POST["cha
 //default behaviour
 if(empty($_GET)){
   $resultset = showDefault();
+  $searchCount = count(showDefault()->fetchAll());
 }
 
 //search
 else {
   try{
     $resultset = search($_GET["firstNameInput"], $_GET["lastNameInput"], $_GET["birthdayInput"], $_GET["company"], $_GET["departmentList"]);
+    $searchCount = count(search($_GET["firstNameInput"], $_GET["lastNameInput"], $_GET["birthdayInput"], $_GET["company"], $_GET["departmentList"])->fetchAll());
   }
   catch(Exception $e){
     $msg = $e->getMessage();
@@ -137,6 +139,9 @@ $companyList = getCompanies();
     ?>
     <div class="row"> 
       <div class="twelve columns">
+      <?php
+        //iterate over PDOStatement if connection to db is established
+        if(($resultset instanceof PDOStatement) && ($searchCount > 0)){ ?>
         <table id="resultTable" class="u-full-width" style="table-layout: fixed">
           <thead>
             <tr>
@@ -147,12 +152,9 @@ $companyList = getCompanies();
               <th class="head">Geburtstag</th>
               <th></th>
             </tr>
-          </thead>
-          <tbody>
-            <?php
-            //iterate over PDOStatement if connection to db is established
-            if($resultset instanceof PDOStatement){
-              foreach ($resultset as $row){ ?>
+          </thead> 
+          <tbody>  
+        <?php foreach ($resultset as $row){ ?>
               <tr class="item" id=<?php echo $row['PNr'];?>>
                 <!-- Vorname -->
                 <td><p id="fn-<?php echo $row['PNr'];?>"><?php echo $row['Firstname'];?></p><input type="text" id="edit-fn-<?php echo $row['PNr'];?>" value="<?php echo $row['Firstname'];?>"></td>
@@ -195,9 +197,11 @@ $companyList = getCompanies();
                   <a class="save" onclick="editEntryEnd(<?php echo $row['PNr'];?>)" id="save-<?php echo $row['PNr'];?>"><img class="icon-btn" src="../images/save.png"></a> 
                 </form></td>
               </tr>
-        <?php }
-            } ?>
-          </tbody>
+        <?php } ?>
+          </tbody>  
+      <?php } else { getRowCount($resultset->queryString)?>
+        <p class="nothing">¯\_(ツ)_/¯<br>Nichts gefunden</p>
+      <?php } ?> 
     </div>
   </div>
 </div>

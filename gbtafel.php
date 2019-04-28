@@ -150,7 +150,7 @@ usort($entries, function ($feed1, $feed2) {
         <h2><?php echo $internalNews["Headline"]; ?></h2>
         <p><?php echo $internalNews["Content"] ?></p>
         <p class="createdDate"> <?php echo strtr(strftime('%A, %d.%m.%Y %H:%M', $internalNews["Date"]), $trans) ?> </p>
-        <p class="link"><?php echo $internalNews["Author"] ?></p>
+        <p class="link">Verfasser: <?php echo $internalNews["Author"] ?></p>
       </article>
       <?php } ?>
 

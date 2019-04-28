@@ -164,6 +164,14 @@ function findDepartmentForPerson($Pnr){
   return $statement->fetchAll()[0][0];
 }
 
+function getRowCount($query){
+  $pdo = (new SQLiteConnection())->connect();
+  if (! ($pdo instanceof PDO)) {
+      throw new Exception("Verbindung zu DB fehlgeschlagen!");
+  }
+  return count($pdo->query($query)->fetchAll());
+}
+
 function validateFirstname($firstname){
     $configs = include('config.php');
     $firstNameLength = $configs['MAX_FIRST_NAME_LENGTH'];
