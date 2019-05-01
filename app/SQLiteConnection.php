@@ -56,6 +56,11 @@ class SQLiteConnection{
       Date TEXT,
       Publish BOOLEAN);
 
+      CREATE TABLE Feed (
+      FId INTEGER PRIMARY KEY,
+      Link TEXT NOT NULL
+      );
+
       INSERT INTO News (Headline, Content, Publish) VALUES (
         "Überschrift", "Text hier eingeben...", 0);
       
