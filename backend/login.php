@@ -73,7 +73,7 @@ if(isset($_POST["username"]) && isset($_POST["password"])){
         <h3>Anmelden</h3>
         <?php if(!empty($msg)){ ?> <p class="response"> <?php echo $msg; ?> </p> <?php } ?>
         <form method="POST" action="login.php">
-          <input type="text" placeholder="Benutzername" name="username">
+          <input type="text" placeholder="Benutzername" name="username" autofocus>
           <input type="password" placeholder="Passwort" name="password">
           <input class="button-primary" type="submit" value="Log In" style="display: block;">
         </form>

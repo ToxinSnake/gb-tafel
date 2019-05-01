@@ -43,7 +43,18 @@ elseif(isset($_POST["privEditUser"]) && isset($_POST["privEditPriv"])){
 }
 
 //Passwort ändern
-//TODO
+elseif(isset($_POST["editPasswdUser"]) && isset($_POST["editPasswdPassword"])){
+  try{
+    $status = changePassword($_POST["editPasswdUser"], $_POST["editPasswdPassword"]);
+    if($status == TRUE){
+      $msg = "Passwort von {$_POST["editPasswdUser"]} erfolgreich geändert!";
+    } else {
+      $msg = "Fehler bei Passwortänderung von{$_POST["editPasswdUser"]}!";
+    }
+  } catch (Exception $e){
+    $msg = $e->getMessage();
+  }
+}
 
 //Benutzer löschen
 elseif(isset($_POST["deleteUser"])){
@@ -147,7 +158,7 @@ $allUsers = getUsers();
         <!-- Benutzer hinzufügen -->
         <form action="" method="post">
           <input type="text" name="addUserUsername" value="" placeholder="Benutzername"  maxlength="40" autofocus required>
-          <input type="text" name="addUserPassword" value="" placeholder="Passwort"  maxlength="60" required>
+          <input type="password" name="addUserPassword" value="" placeholder="Passwort"  maxlength="60" required>
           <select name="addUserPrivilege" required>
             <option value="">Privilegien wählen...</option>  
             <option value="user">user</option>
@@ -165,7 +176,7 @@ $allUsers = getUsers();
             <option value="<?php echo $user['Username']; ?>"><?php echo $user['Username']; ?></option>  
             <?php } ?> 
           </select>
-          <input type="text" name="editPasswdPassword" value="" placeholder="Passwort"  maxlength="60" required>
+          <input type="password" name="editPasswdPassword" value="" placeholder="Passwort"  maxlength="60" required>
           <input class="button-primary" value="Passwort ändern" type="submit">
         </form>
       </div>

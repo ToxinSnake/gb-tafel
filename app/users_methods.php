@@ -187,17 +187,23 @@ function changePassword($username, $password){
             break;
     }
 
+    $pdo = (new SQLiteConnection())->connect();
+    if(!($pdo instanceof PDO)){
+        throw new Exception("Verbindung zur DB gescheitert!");
+    }
+
     //Mit BCRYPT hashen
     $passwdHash = password_hash($password, PASSWORD_BCRYPT);
 
     $sql = 'UPDATE User
-    SET Password = :password,
+    SET Password = :password
     WHERE Username = :username;';
     $statement = $pdo->prepare($sql);
+    var_dump($statement);
     $rtvalue = $statement->execute([ //TRUE on success, FALSE else
         ':password' => $passwdHash,
         ':username' => $username]);
 
-    return $rtValue;
+    return $rtvalue;
 }
 ?>
