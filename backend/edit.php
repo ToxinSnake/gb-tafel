@@ -70,7 +70,7 @@ $currentNews = getNews();
   –––––––––––––––––––––––––––––––––––––––––––––––––– -->
   <div class="container">
     <div class="row">
-      <div class="twelve columns" id="menu">
+      <div class="twelve columns" id="editor">
         <h3>Tafel bearbeiten</h3>
       <?php if(!empty($msg)){ ?> <p> <?php echo $msg; ?> </p> <?php } ?>
         <form action="" method="post">

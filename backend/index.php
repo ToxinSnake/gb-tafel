@@ -70,6 +70,7 @@ if(isset($_GET["logout"])){
         <h3>Hauptmenü</h3>
         <a class="button button-primary" href="search.php">Geburtstage bearbeiten</a>
         <a class="button button-primary" href="companies.php">Firmen/Abteilungen verwalten</a>
+        <a class="button button-primary" href="signs.php">Räume verwalten</a>
         <a class="button button-primary" href="edit.php">Tafel ändern</a>
         <a class="button button-primary" href="../gbtafel.php">Tafel anzeigen</a>
         <?php if($_SESSION["privilege"] == "admin") {?>

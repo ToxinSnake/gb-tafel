@@ -106,7 +106,7 @@ $companyList = getCompanies();
         <div class="four columns" style="margin-left: 0">
           <select name="company" onchange="departmentChangeSearch('company','departmentList','depSelector')">
             <option value="">Firma wählen...</option>
-            <?php foreach ($companyList as $company){ ?> ?>
+            <?php foreach ($companyList as $company){ ?>
               <option value="<?php echo $company['CName']; ?>"<?php echo (isset($_GET["company"]) && $company['CName'] == $_GET["company"]) ? "selected" : ""; ?>><?php echo $company['CName']; ?></option>
             <?php } ?>
           </select>

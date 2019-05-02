@@ -115,7 +115,7 @@ input, select{
   margin: 1em auto;
 }
 
-input[type="checkbox"]#publish {
+input[type="checkbox"]#publish, input[type="checkbox"]#occupied {
   max-width: 10px;
   min-width: 0px;
   margin-right: 1em;
@@ -132,6 +132,10 @@ textarea {
 .twelve.columns#menu{
   text-align: center;
   margin-top: 10%;
+}
+
+.twelve.columns#editor{
+  text-align: center;
 }
 
 .twelve.columns#search{

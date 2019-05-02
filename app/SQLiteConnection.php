@@ -56,6 +56,14 @@ class SQLiteConnection{
       Date TEXT,
       Publish BOOLEAN);
 
+      CREATE TABLE Room (
+      RId INTEGER PRIMARY KEY,
+      Roomname TEXT NOT NULL,
+      Line1 TEXT,
+      Line2 TEXT,
+      Line3 TEXT,
+      Occupied BOOLEAN NOT NULL);
+
       CREATE TABLE Feed (
       FId INTEGER PRIMARY KEY,
       Link TEXT NOT NULL

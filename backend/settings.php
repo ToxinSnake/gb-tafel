@@ -1,16 +1,16 @@
 <?php
-session_start();
-if(!isset($_SESSION["username"])){
-  $_SESSION["referer"] = $_SERVER["PHP_SELF"];
-  header("Location: login.php"); 
-  exit;
-}
+// session_start();
+// if(!isset($_SESSION["username"])){
+//   $_SESSION["referer"] = $_SERVER["PHP_SELF"];
+//   header("Location: login.php"); 
+//   exit;
+// }
 
 //Nur Admins bekommen Zugang
-if($_SESSION["privilege"] != "admin"){ 
-  header('HTTP/1.0 403 Forbidden');
-  exit('Forbidden');
-}
+// if($_SESSION["privilege"] != "admin"){ 
+//   header('HTTP/1.0 403 Forbidden');
+//   exit('Forbidden');
+// }
 
 require_once "../app/settings_methods.php";
 
