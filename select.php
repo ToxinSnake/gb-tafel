@@ -1,24 +1,10 @@
 <?php
-session_start();
-if(!isset($_SESSION["username"])){
-  $_SESSION["referer"] = $_SERVER["PHP_SELF"];
-  header("Location: login.php"); 
-  exit;
+require_once "./app/doorsign_methods.php";
+try{
+  $rooms = getRoomIds();
 }
-
-//Logout
-if(isset($_GET["logout"])){
-  
-  //Cookie Parameter holen, Lebenszeit auf Vergangenheit setzen, damit Cookie vom Browser gelöscht wird.
-  $params = session_get_cookie_params();
-  setcookie(session_name(), '', time() - 42000,
-    $params["path"], $params["domain"],
-    $params["secure"], $params["httponly"]
-  );
-  session_destroy();
-
-  header("Location: login.php"); 
-  exit;
+catch(Exception $e){
+  $msg = $e->getMessage();
 }
 
 ?>
@@ -37,7 +23,7 @@ if(isset($_GET["logout"])){
   <!-- Basic Page Needs
   –––––––––––––––––––––––––––––––––––––––––––––––––– -->
   <meta charset="utf-8">
-  <title>Hauptmenü</title>
+  <title>Raumauswahl</title>
   <meta name="description" content="">
   <meta name="author" content="Arne Otten">
 
@@ -51,13 +37,13 @@ if(isset($_GET["logout"])){
 
   <!-- CSS
   –––––––––––––––––––––––––––––––––––––––––––––––––– -->
-  <link rel="stylesheet" href="../css/normalize.css">
-  <link rel="stylesheet" href="../css/skeleton.css">
-  <link rel="stylesheet" href="../css/menustyle.css">
+  <link rel="stylesheet" href="css/normalize.css">
+  <link rel="stylesheet" href="css/skeleton.css">
+  <link rel="stylesheet" href="css/menustyle.css">
 
   <!-- Favicon
   –––––––––––––––––––––––––––––––––––––––––––––––––– -->
-  <link rel="icon" type="image/png" href="../images/favicon.png">
+  <link rel="icon" type="image/png" href="images/favicon.png">
 
 </head>
 <body>
@@ -67,19 +53,11 @@ if(isset($_GET["logout"])){
   <div class="container">
     <div class="row">
       <div class="twelve columns" id="menu">
-        <h3>Hauptmenü</h3>
-        <a class="button button-primary" href="search.php">Geburtstage bearbeiten</a>
-        <a class="button button-primary" href="companies.php">Firmen/Abteilungen verwalten</a>
-        <a class="button button-primary" href="signs.php">Räume verwalten</a>
-        <a class="button button-primary" href="../select.php">Raumauswahl</a>
-        <a class="button button-primary" href="edit.php">Tafel ändern</a>
-        <a class="button button-primary" href="../gbtafel.php">Tafel anzeigen</a>
-        <?php if($_SESSION["privilege"] == "admin") {?>
-        <a class="button button" href="users.php" style="margin-top: 3em;">Benutzer verwalten</a>
-        <a class="button button" href="settings.php" >Einstellungen</a>
+        <h3>Raumauswahl</h3>
+        <?php foreach($rooms as $room) { ?>
+        <a class="button button-primary" href="doorsign.php?id=<?php echo $room['RId']; ?>"><?php echo $room["Roomname"]; ?></a>
         <?php } ?>
-        <a class="button button" href="index.php?logout=1" style="margin-top: 3em;">Logout</a>
-        <p>Eingeloggt als: <?php echo $_SESSION["username"] ?></p>
+        <a class="button button" href="backend/login.php">Zurück</a>
     </div>
   </div>
 </div>

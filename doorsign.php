@@ -11,6 +11,8 @@ if(isset($_GET["id"])){
   $roomname = "Roomname - Call with proper Room ID";
   $line1 = "";
   $line2 = "";
+  header("Location: select.php"); 
+  exit;
 }
 
 ?>
@@ -21,7 +23,7 @@ if(isset($_GET["id"])){
   <!-- Basic Page Needs
   –––––––––––––––––––––––––––––––––––––––––––––––––– -->
   <meta charset="utf-8">
-  <title>Your page title here :)</title>
+  <title><?php echo htmlspecialchars($roomname); ?></title>
   <meta name="description" content="">
   <meta name="author" content="Arne Otten">
 

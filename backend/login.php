@@ -77,6 +77,7 @@ if(isset($_POST["username"]) && isset($_POST["password"])){
           <input type="password" placeholder="Passwort" name="password">
           <input class="button-primary" type="submit" value="Log In" style="display: block;">
         </form>
+        <a class="button button" href="../select.php">Raumauswahl</a>
       </div>
     </div>
   </div>

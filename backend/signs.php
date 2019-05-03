@@ -1,6 +1,6 @@
 <?php
 session_start();
-if(!isset($_SESSION["username"])){
+if(!!empty($_SESSION["username"])){
   $_SESSION["referer"] = $_SERVER["PHP_SELF"];
   header("Location: login.php"); 
   exit;
@@ -9,7 +9,7 @@ if(!isset($_SESSION["username"])){
 require_once "../app/signs_methods.php";
 
 //Raum hinzufügen
-if(isset($_POST["addroom"])){
+if(!empty($_POST["addroom"])){
   try{
     $result = addRoom($_POST["addroom"]);
   }
@@ -26,8 +26,8 @@ if(isset($_POST["addroom"])){
 }
 
 //Raum bearbeiten
-if(isset($_POST["editroom"])){
-  if(isset($_POST["occupied"])) $_POST["occupied"] = 1;
+if(!empty($_POST["editroom"])){
+  if(!empty($_POST["occupied"])) $_POST["occupied"] = 1;
   else $_POST["occupied"] = 0; 
   try{
     $result = editRoom($_POST["editroom"], $_POST["roomname"], $_POST["line1"], $_POST["line2"], "", $_POST["occupied"]);
@@ -44,7 +44,7 @@ if(isset($_POST["editroom"])){
 }
 
 //Raum löschen
-if(isset($_POST["delroom"])){
+if(!empty($_POST["delroom"])){
   try{
     $name = getRoomById($_POST["delroom"]);
     $result = deleteRoom($_POST["delroom"]);
@@ -136,7 +136,7 @@ if(isset($_POST["delroom"])){
             //Alle Räume holen
             $rooms = getRooms(); 
             foreach($rooms as $room) {?>          
-              <option value="<?php echo $room['RId']; ?>" <?php echo (isset($_POST["editroom"]) && $room['RId'] == $_POST["editroom"]) ? "selected" : ""; ?>><?php echo $room['Roomname']; ?></option>
+              <option value="<?php echo $room['RId']; ?>" <?php echo (!empty($_POST["editroom"]) && $room['RId'] == $_POST["editroom"]) ? "selected" : ""; ?>><?php echo $room['Roomname']; ?></option>
             <?php } ?>
           </select>
           <input type="text" id="roomname" name="roomname" value="" placeholder="Raumname"  maxlength="70" autofocus required>

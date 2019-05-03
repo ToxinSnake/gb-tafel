@@ -33,4 +33,16 @@ function getRoom($id){
     return $statement->fetch(PDO::FETCH_ASSOC);
 }
 
+function getRoomIds(){
+    //Connect to DB
+    $pdo = connect();
+    if(!($pdo instanceof PDO)){
+        throw new Exception("Verbindung zur DB gescheitert!");
+    }
+    
+    $sql= 'SELECT RId, Roomname FROM Room;';
+    $statement = $pdo->prepare($sql);
+    return $pdo->query($sql);
+}
+
 ?>
