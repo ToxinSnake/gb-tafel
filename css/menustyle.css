@@ -155,6 +155,8 @@ textarea {
 
 table#resultTable p {
   margin-bottom: 0;
+  height: 38px;
+  
 }
 
 table#resultTable form {
@@ -165,12 +167,14 @@ table#resultTable input {
   display: none;
   min-width: 0px;
   width: 9em;
+  margin: 0 0 0 0;
 }
 
 table#resultTable select {
   display: none;
   min-width: 0px;
   width: 9em;
+  margin: 0 0 0 0;
 }
 
 table#resultTable tr a{
