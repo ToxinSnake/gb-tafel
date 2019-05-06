@@ -62,14 +62,17 @@ function addDepartmentToDb($company, $department){
     $CId = getCompanyId($company);
 
     //Abteilung einfügen
-    $sql = 'INSERT INTO Department (Dname) VALUES (:department)';
-    $statement = $pdo->prepare($sql);
-    $rtvalue = $statement->execute([':department' => $department]);
+    if(!departmentExists($department)){
+        $sql = 'INSERT INTO Department (Dname) VALUES (:department)';
+        $statement = $pdo->prepare($sql);
+        $rtvalue = $statement->execute([':department' => $department]);
 
-    //Wenn einfügen scheitert aus irgendwelchen Gründen
-    if($rtvalue == false){
-        return false;
+        //Wenn einfügen scheitert aus irgendwelchen Gründen
+        if($rtvalue == false){
+            return false;
+        }    
     }
+
 
     //DId von neue eingefügter Abteilung holen
     $sql = 'SELECT DNr FROM Department WHERE DName IS :department';
@@ -87,6 +90,22 @@ function addDepartmentToDb($company, $department){
     
     return $rtvalue;
 
+}
+
+function departmentExists($department){
+    $pdo = (new SQLiteConnection())->connect();
+    if(!($pdo instanceof PDO)){
+        throw new Exception("Verbindung zur DB gescheitert!");
+    }
+
+    $sql = 'SELECT * FROM Department WHERE DName IS :department';
+    $statement = $pdo->prepare($sql);
+    $statement->execute([':department' => $department]);
+    if(count($statement->fetchAll()) != 0){
+        return true;
+    } else {
+        return false;
+    }
 }
 
 function deleteCompany($company){
