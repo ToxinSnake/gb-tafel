@@ -26,7 +26,8 @@ function showDefault(){
   $sql = "SELECT Person.PNr, Person.Firstname, Person.Lastname, Company.CName, Department.DName, Person.Birthday FROM Person 
   INNER JOIN Company_Department ON Person.Company_Department_Id IS Company_Department.CoDeId
   INNER JOIN Company ON CId IS Company.CNr
-  INNER JOIN Department ON DId IS Department.DNr;";
+  INNER JOIN Department ON DId IS Department.DNr
+  LIMIT 10;";
   return $pdo->query($sql);
 }
 
@@ -55,7 +56,8 @@ function search($firstname, $lastname, $birthday, $company, $department){
   AND Person.Lastname LIKE :lastname 
   AND Person.Birthday LIKE :birthday 
   AND Company.CName LIKE :company 
-  AND Department.DName LIKE :department;";
+  AND Department.DName LIKE :department
+  LIMIT 15;";
   $statement = $pdo->prepare($sql);
   $statement->execute([ //TRUE on success, FALSE else
     ':firstname' => $firstname,

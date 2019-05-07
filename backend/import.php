@@ -6,30 +6,23 @@ if(!isset($_SESSION["username"])){
   exit;
 }
 
-//Logout
-if(isset($_GET["logout"])){
-  
-  //Cookie Parameter holen, Lebenszeit auf Vergangenheit setzen, damit Cookie vom Browser gelöscht wird.
-  $params = session_get_cookie_params();
-  setcookie(session_name(), '', time() - 42000,
-    $params["path"], $params["domain"],
-    $params["secure"], $params["httponly"]
-  );
-  session_destroy();
-
-  header("Location: login.php"); 
-  exit;
+//Nur Admins bekommen Zugang
+if($_SESSION["privilege"] != "admin"){ 
+  header('HTTP/1.0 403 Forbidden');
+  exit('Forbidden');
 }
 
-?>
+$msg;
 
+require_once "../app/csvimport.php";
+
+?>
 <!DOCTYPE html>
 <!--
 * Made by Arne Otten
 * www.mj-12.net
-* 09/07/2018
+* 08/07/2018
 -->
-
 
 <html lang="en">
 <head>
@@ -37,7 +30,7 @@ if(isset($_GET["logout"])){
   <!-- Basic Page Needs
   –––––––––––––––––––––––––––––––––––––––––––––––––– -->
   <meta charset="utf-8">
-  <title>Hauptmenü</title>
+  <title>Einstellungen</title>
   <meta name="description" content="">
   <meta name="author" content="Arne Otten">
 
@@ -67,20 +60,21 @@ if(isset($_GET["logout"])){
   <div class="container">
     <div class="row">
       <div class="twelve columns" id="menu">
-        <h3>Hauptmenü</h3>
-        <a class="button button-primary" href="search.php">Geburtstage bearbeiten</a>
-        <a class="button button-primary" href="companies.php">Firmen/Abteilungen verwalten</a>
-        <a class="button button-primary" href="signs.php">Räume verwalten</a>
-        <a class="button button-primary" href="../select.php">Raumauswahl</a>
-        <a class="button button-primary" href="edit.php">Tafel ändern</a>
-        <a class="button button-primary" href="../gbtafel.php">Tafel anzeigen</a>
-        <?php if($_SESSION["privilege"] == "admin") {?>
-        <a class="button button" href="users.php" style="margin-top: 3em;">Benutzer verwalten</a>
-        <a class="button button" href="settings.php" >Einstellungen</a>
-        <a class="button button" href="import.php" >CSV-Import</a>
-        <?php } ?>
-        <a class="button button" href="index.php?logout=1" style="margin-top: 3em;">Logout</a>
-        <p>Eingeloggt als: <?php echo $_SESSION["username"] ?></p>
+        <h3>CSV-Import</h3>
+        <p><b>ACHTUNG:</b> Die CSV-Datei muss in folgendem Format vorliegen:<br/>
+        Name,Vorname,Geburtsdatum,Firma,Abteilung<br/>
+        <b>Bsp:</b> Baumeister,Bob,10.10.1980,Trauco,EDV<br/>
+        Geburtsdatum kann im ISO (2000-12-25) oder normalen Deutschen Format (25.12.2000) vorliegen.<br/>
+        Doppelte Personeneinträge werden <b>NICHT</b> erkannt!<br/>
+        Der Import sollte nur direkt nach der Installation durchgeführt werden,<br/>
+        oder wenn sichergestellt ist, dass nicht dutzende doppelte Einträge entstehen.
+        </p>
+        <?php echo (isset($msg)) ? $msg : ""; ?>
+        <form enctype="multipart/form-data" action="" method="post">
+          <input class="button-primary" name="fileToUpload" type="file" accept=".csv">
+          <input class="button-primary" name="submit" value="Absenden" type="submit">
+        </form>
+        <a class="button button" href="index.php" style="margin-top: 3em;">Zurück</a>
     </div>
   </div>
 </div>
