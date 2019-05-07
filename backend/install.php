@@ -1,35 +1,21 @@
 <?php
-session_start();
-if(!isset($_SESSION["username"])){
-  $_SESSION["referer"] = $_SERVER["PHP_SELF"];
-  header("Location: login.php"); 
-  exit;
-}
 
-//Logout
-if(isset($_GET["logout"])){
-  
-  //Cookie Parameter holen, Lebenszeit auf Vergangenheit setzen, damit Cookie vom Browser gelöscht wird.
-  $params = session_get_cookie_params();
-  setcookie(session_name(), '', time() - 42000,
-    $params["path"], $params["domain"],
-    $params["secure"], $params["httponly"]
-  );
-  session_destroy();
+require_once "../app/settings_methods.php";
 
-  header("Location: login.php"); 
-  exit;
+//Verbindung testen
+$result;
+
+if(isset($_GET["createdb"])){
+  $result = createdb();
 }
 
 ?>
-
 <!DOCTYPE html>
 <!--
 * Made by Arne Otten
 * www.mj-12.net
-* 09/07/2018
+* 08/07/2018
 -->
-
 
 <html lang="en">
 <head>
@@ -37,7 +23,7 @@ if(isset($_GET["logout"])){
   <!-- Basic Page Needs
   –––––––––––––––––––––––––––––––––––––––––––––––––– -->
   <meta charset="utf-8">
-  <title>Hauptmenü</title>
+  <title>Installation</title>
   <meta name="description" content="">
   <meta name="author" content="Arne Otten">
 
@@ -67,20 +53,16 @@ if(isset($_GET["logout"])){
   <div class="container">
     <div class="row">
       <div class="twelve columns" id="menu">
-        <h3>Hauptmenü</h3>
-        <a class="button button-primary" href="search.php">Geburtstage bearbeiten</a>
-        <a class="button button-primary" href="companies.php">Firmen/Abteilungen verwalten</a>
-        <a class="button button-primary" href="signs.php">Räume verwalten</a>
-        <a class="button button-primary" href="../select.php">Raumauswahl</a>
-        <a class="button button-primary" href="edit.php">Tafel ändern</a>
-        <a class="button button-primary" href="../">Tafel anzeigen</a>
-        <?php if($_SESSION["privilege"] == "admin") {?>
-        <a class="button button" href="users.php" style="margin-top: 3em;">Benutzer verwalten</a>
-        <!--<a class="button button" href="settings.php" >Einstellungen</a>-->
-        <a class="button button" href="import.php" >CSV-Import</a>
-        <?php } ?>
-        <a class="button button" href="index.php?logout=1" style="margin-top: 3em;">Logout</a>
-        <p>Eingeloggt als: <?php echo $_SESSION["username"] ?></p>
+        <h3>Installation</h3>
+        <ol>
+          <li>Datenbank durch klick auf 'Datenbank erstellen' anlegen.</li>
+          <li>Bei erfolgreichem Anlegen auf 'Login' klicken und mit admin:admin einloggen</li>
+          <li>Passwort für den Benutzer 'admin' ändern.</li>
+          <li>Geburtstage per CSV importieren oder einzeln anlegen</li>
+        </ol>
+        <p><?php echo (isset($result)) ? $result : "";?></p><br>
+        <a class="button button-primary" href="?createdb">Datenbank erstellen</a>
+        <a class="button button" href="./" style="margin-top: 3em;">Login</a>
     </div>
   </div>
 </div>

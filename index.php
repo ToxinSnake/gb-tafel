@@ -30,12 +30,15 @@ $NUMITEMS = 2;
 //Read each feed's items
 $entries = array();
 $xml = simplexml_load_file($feed);
-$entries = array_merge($entries, $xml->xpath("//item"));
+if($xml !== FALSE){
+  $entries = array_merge($entries, $xml->xpath("//item"));
 
-//Sort feed entries by pubDate
-usort($entries, function ($feed1, $feed2) {
+  //Sort feed entries by pubDate
+  usort($entries, function ($feed1, $feed2) {
     return strtotime($feed2->pubDate) - strtotime($feed1->pubDate);
-});
+  }); 
+}
+
 ?>
 <!DOCTYPE html>
 <html lang="en">
@@ -44,7 +47,7 @@ usort($entries, function ($feed1, $feed2) {
   <!-- Basic Page Needs
   –––––––––––––––––––––––––––––––––––––––––––––––––– -->
   <meta charset="utf-8">
-  <title>GB Tafel</title>
+  <title>Geburtstage</title>
   <meta name="description" content="">
   <meta name="author" content="Arne Otten">
 
@@ -77,6 +80,7 @@ usort($entries, function ($feed1, $feed2) {
   <!-- Logo, Datum Uhrzeit -->
     <div class="twelve columns" id="header">
       <img src="images/trauco.png">
+      <img style="margin-left: 10px;" src="images/nowebau.png">
       <h4 id="clock"></h4><br>
       <h4 style="margin-top: 10px"><?php echo "$currentDay, $currentDate"?></h4>
     </div>

@@ -26,6 +26,7 @@ if(isset($_GET["id"])){
   <title><?php echo htmlspecialchars($roomname); ?></title>
   <meta name="description" content="">
   <meta name="author" content="Arne Otten">
+  <meta http-equiv="refresh" content="900" />
 
   <!-- Mobile Specific Metas
   –––––––––––––––––––––––––––––––––––––––––––––––––– -->
@@ -90,19 +91,37 @@ if(isset($_GET["id"])){
 
     //"rgb(139, 0, 0)" means darkred/occupied
     if(status === "rgb(139, 0, 0)"){
-      $(".line").css("background-color", "green");
-      $("#switch").css("background-color", "green");
-      $("#switch").css("border-color", "green");
-      $("#roomname").html(roomname + " - Frei");
-      $("#switch").html("Frei");
+      $.ajax({
+        type: "POST",
+        url: 'doorsign.php',
+        data: { id: <?php echo (isset($_GET["id"])) ? $_GET["id"] : "" ?>,
+                ocu: 0},
+        success: function(){
+          $(".line").css("background-color", "green");
+          $("#switch").css("background-color", "green");
+          $("#switch").css("border-color", "green");
+          $("#roomname").html(roomname + " - Frei");
+          $("#switch").html("Frei");
+        }
+      });
+      
 
     //rgb(0, 128, 0) means green/free
     } else if (status === "rgb(0, 128, 0)"){
-      $(".line").css("background-color", "darkred");
-      $("#switch").css("background-color", "darkred");
-      $("#switch").css("border-color", "darkred");
-      $("#roomname").html(roomname + " - Belegt");
-      $("#switch").html("Belegt");
+      $.ajax({
+        type: "POST",
+        url: 'doorsign.php',
+        data: { id: <?php echo (isset($_GET["id"])) ? $_GET["id"] : "" ?>,
+                ocu: 1},
+        success: function(){
+          $(".line").css("background-color", "darkred");
+          $("#switch").css("background-color", "darkred");
+          $("#switch").css("border-color", "darkred");
+          $("#roomname").html(roomname + " - Belegt");
+          $("#switch").html("Belegt");
+        }
+      });
+
     }
   }
 

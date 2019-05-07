@@ -2,6 +2,8 @@
 const CONNECTION_FAILED = 100;
 const DB_DOES_NOT_EXISTS = 103;
 
+
+
 function connect(){
     $configs = include ('config.php');
     $path = $configs['PATH_TO_SQLITE_FILE'];
@@ -17,6 +19,24 @@ function connect(){
     } else {
         return DB_DOES_NOT_EXISTS;
     }
+}
+
+//AJAX Call für dynamisches umswitchen von Frei zu Belegt
+if(isset($_POST["id"])){
+    //Connect to DB
+    $pdo = connect();
+    if(!($pdo instanceof PDO)){
+        throw new Exception("Verbindung zur DB gescheitert!");
+    }
+    
+    $sql = 'UPDATE Room
+    SET Occupied = :occupied
+    WHERE RId = :id;';
+    $statement = $pdo->prepare($sql);
+    $rtvalue = $statement->execute([ //TRUE on success, FALSE else
+        ':occupied' => $_POST["ocu"],
+        ':id' => $_POST["id"]
+    ]);
 }
 
 function getRoom($id){

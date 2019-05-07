@@ -199,7 +199,6 @@ function changePassword($username, $password){
     SET Password = :password
     WHERE Username = :username;';
     $statement = $pdo->prepare($sql);
-    var_dump($statement);
     $rtvalue = $statement->execute([ //TRUE on success, FALSE else
         ':password' => $passwdHash,
         ':username' => $username]);

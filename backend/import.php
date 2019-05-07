@@ -30,7 +30,7 @@ require_once "../app/csvimport.php";
   <!-- Basic Page Needs
   –––––––––––––––––––––––––––––––––––––––––––––––––– -->
   <meta charset="utf-8">
-  <title>Einstellungen</title>
+  <title>CSV-Import</title>
   <meta name="description" content="">
   <meta name="author" content="Arne Otten">
 
