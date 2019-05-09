@@ -18,13 +18,6 @@ if(isset($_POST["submit"])) {
 
     $file = fopen($target_file, "r");
 
-    /* 
-    bindParam kann nicht benutzt werden, da die selben Placeholder nicht mehrmals verwendet werden dürfen!
-
-    1. Company einfügen falls sie noch nicht existiert
-    2. Department einfügen falls noch nicht existiert
-    3. Company_Department setzen, falls noch nicht existiert
-    */
     $qCompany =
     'INSERT INTO Company(CName) 
     SELECT :company1
@@ -40,10 +33,10 @@ if(isset($_POST["submit"])) {
     SELECT CNr, DNr FROM Company, Department WHERE CName IS :company1 AND DName IS :department1 AND
     NOT EXISTS
     (
-    SELECT Company_Department.CoDeId FROM Company_Department
-    INNER JOIN Company ON Company_Department.CId IS Company.CNr
-    INNER JOIN Department ON Company_Department.DId IS Department.DNr
-    WHERE Company.Cname IS :company2 AND Department.DName IS :department2
+        SELECT Company_Department.CoDeId FROM Company_Department
+        INNER JOIN Company ON Company_Department.CId IS Company.CNr
+        INNER JOIN Department ON Company_Department.DId IS Department.DNr
+        WHERE Company.Cname IS :company2 AND Department.DName IS :department2
     );';
 
     $qPerson = 
@@ -55,11 +48,19 @@ if(isset($_POST["submit"])) {
     $sCoDe = $pdo->prepare($qCoDe);
     $sPerson = $pdo->prepare($qPerson);
 
-
-    $rowCount = 0;
+    $msg = "";
+    $rowCount = 1;
     //[0] => Name, [1] => Vorname, [2] => GB, [3] => Company, [4] => Department
     while(!feof($file)){
         $row = fgetcsv($file);
+
+        if(count($row) != 5){
+            $msg .= "Fehler in Reihe {$rowCount}<br/>";
+            $rowCount++;
+            continue;
+        } elseif ($row[0] === NULL){
+            continue;
+        }
 
         //Datum nach ISO formatieren
         $tempDate = new DateTime($row[2]);
@@ -93,6 +94,6 @@ if(isset($_POST["submit"])) {
     }
 
     fclose($file);
-    $msg = "Import erfolgreich!";
+    $msg .= "Import erfolgreich!";
 }
 ?>

@@ -12,8 +12,6 @@ if($_SESSION["privilege"] != "admin"){
   exit('Forbidden');
 }
 
-$msg;
-
 require_once "../app/csvimport.php";
 
 ?>
@@ -69,7 +67,7 @@ require_once "../app/csvimport.php";
         Der Import sollte nur direkt nach der Installation durchgeführt werden,<br/>
         oder wenn sichergestellt ist, dass nicht dutzende doppelte Einträge entstehen.
         </p>
-        <?php echo (isset($msg)) ? $msg : ""; ?>
+        <p><?php echo (isset($msg)) ? $msg : ""; ?></p>
         <form enctype="multipart/form-data" action="" method="post">
           <input class="button-primary" name="fileToUpload" type="file" accept=".csv">
           <input class="button-primary" name="submit" value="Absenden" type="submit">
